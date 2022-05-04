@@ -1,4 +1,5 @@
 using BlazorApp1.Server.Hubs;
+using BlazorApp1.Server.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
+
+builder.Services.AddSingleton<IEntryValueStore, EntryValueStore>();
 
 var app = builder.Build();
 
