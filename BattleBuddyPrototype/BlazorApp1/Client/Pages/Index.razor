@@ -95,6 +95,14 @@
         }
     }
 
+    public async Task ScrollToEntryIndex(SideIdentifier side, int index)
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("ScrollToIndex", side, index);
+        }
+    }
+
     public async Task RequestFocus(string target)
     {
         if (hubConnection is not null)

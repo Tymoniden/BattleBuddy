@@ -26,7 +26,7 @@ namespace BattleBuddyPrototype
 
         HubConnection connection;
         private List<string> _leftEntries = new ();
-        private List<string> _rightEntries;
+        private List<string> _rightEntries = new();
 
         public MainWindow()
         {
