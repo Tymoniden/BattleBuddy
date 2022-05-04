@@ -91,15 +91,16 @@
     {
         if (hubConnection is not null)
         {
-            await hubConnection.SendAsync("ScrollTo", side, entry);
-        }
-    }
+            var index = entries[side].IndexOf(entry);
 
-    public async Task ScrollToEntryIndex(SideIdentifier side, int index)
-    {
-        if (hubConnection is not null)
-        {
-            await hubConnection.SendAsync("ScrollToIndex", side, index);
+            if(index != -1)
+            {
+                await hubConnection.SendAsync("RequestScrollToIndex", side, index);
+            }
+            else
+            {
+                await hubConnection.SendAsync("ScrollTo", side, entry);
+            }
         }
     }
 

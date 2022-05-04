@@ -20,9 +20,14 @@ namespace BattleBuddyPrototype
     {
         const string JS_SCROLL_FUNCTION = "function scrollToPercent(percent){var body = document.body;var html = document.documentElement;var height = Math.max(body.scrollHeight, body.offsetHeight,html.clientHeight, html.scrollHeight, html.offsetHeight);var factor = percent/100.0;var pixelTarget = height * factor;window.scrollTo({top: pixelTarget,behavior: 'smooth',});console.log(\"scrolled to \" + pixelTarget + \"px(\" + + percent + \"%) of max height \" + height + \"px\");}";
         const string JS_SCROLL_TO = "scrollToPercent({0});";
-        const string JS_GET_ENTRIES = "function getEntries(){ var entries = []; $(\".wh40k_unit_sheet > table > thead.unit_header > tr:nth-child(1) > td:nth-child(2)\").each(function(index, element){ entries.push($(element).text()); }); return entries;}; getEntries();";
-        const string JS_SCROLL_TO_ENTRY_FUNCTION = "function scrollToEntry(entry){ var found; $(\".wh40k_unit_sheet > table > thead.unit_header > tr:nth-child(1) > td:nth-child(2)\").each(function(index, element){ if($(element).text() == entry){ found = $(element); return false; } }); if(found != undefined){ $(found).get(0).scrollIntoView({ behavior: 'smooth' });}}; scrollToEntry(\"{0}\"); ";
+
+        const string JS_SCROLL_TO_INDEX_FUNCTION = "function scrollToIndex(index){$(\".wh40k_unit_sheet > table > thead.unit_header > tr:nth-child(1) > td:nth-child(2)\")[index].scrollIntoView({ behavior: 'smooth' });}";
+        const string JS_SCROLL_TO_INDEX = "scrollToIndex({0});";
+        
+        const string JS_SCROLL_TO_ENTRY_FUNCTION = "function scrollToEntry(entry){ var found; $(\".wh40k_unit_sheet > table > thead.unit_header > tr:nth-child(1) > td:nth-child(2)\").each(function(index, element){ if($(element).text() == entry){ found = $(element); return false; } }); if(found != undefined){ $(found).get(0).scrollIntoView({ behavior: 'smooth' });}};";
         const string JS_SCROLL_TO_ENTRY = "scrollToEntry(\"{0}\");";
+
+        const string JS_GET_ENTRIES = "function getEntries(){ var entries = []; $(\".wh40k_unit_sheet > table > thead.unit_header > tr:nth-child(1) > td:nth-child(2)\").each(function(index, element){ entries.push($(element).text()); }); return entries;}; getEntries();";
 
         HubConnection connection;
         private List<string> _leftEntries = new ();
@@ -53,10 +58,6 @@ namespace BattleBuddyPrototype
                     {
                         await leftWebView.ExecuteScriptAsync(string.Format(JS_SCROLL_TO, 100));
                     }
-                    else
-                    {
-                        await leftWebView.ExecuteScriptAsync(string.Format(JS_SCROLL_TO_ENTRY, entry));
-                    }
                 }
                 else if(side == SideIdentifier.Right)
                 {
@@ -68,10 +69,16 @@ namespace BattleBuddyPrototype
                     {
                         await rightWebView.ExecuteScriptAsync(string.Format(JS_SCROLL_TO, 100));
                     }
-                    else
-                    {
-                        await rightWebView.ExecuteScriptAsync(string.Format(JS_SCROLL_TO_ENTRY, entry));
-                    }
+                }
+            });
+
+            connection.On<SideIdentifier, int>("ScrollToIndex", async (side, index) =>
+            {
+                var control = side == SideIdentifier.Left ? leftWebView : rightWebView;
+
+                if (control != null)
+                {
+                    await control.ExecuteScriptAsync(string.Format(JS_SCROLL_TO_INDEX, index));
                 }
             });
 
@@ -111,7 +118,6 @@ namespace BattleBuddyPrototype
 
         async Task SendLeftEntries()
         {
-            _ = await leftWebView.CoreWebView2.ExecuteScriptAsync(JS_SCROLL_TO_ENTRY_FUNCTION);
             var html = await leftWebView.CoreWebView2.ExecuteScriptAsync(JS_GET_ENTRIES);
             _leftEntries = JsonConvert.DeserializeObject<List<string>>(html);
 
@@ -125,7 +131,6 @@ namespace BattleBuddyPrototype
 
         async Task SendRightEntries()
         {
-            _ = await rightWebView.CoreWebView2.ExecuteScriptAsync(JS_SCROLL_TO_ENTRY_FUNCTION);
             var html = await rightWebView.CoreWebView2.ExecuteScriptAsync(JS_GET_ENTRIES);
             _rightEntries = JsonConvert.DeserializeObject<List<string>>(html);
 
@@ -166,6 +171,7 @@ namespace BattleBuddyPrototype
             if(sender is CoreWebView2 webView)
             {
                 webView.ExecuteScriptAsync(JS_SCROLL_FUNCTION);
+                webView.ExecuteScriptAsync(JS_SCROLL_TO_INDEX_FUNCTION);
             }
         }
 

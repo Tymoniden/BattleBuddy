@@ -29,6 +29,11 @@ namespace BlazorApp1.Server.Hubs
             await Clients.All.SendAsync("ScrollToEntry", side, entry);
         }
 
+        public async Task RequestScrollToIndex(SideIdentifier side, int index)
+        {
+            await Clients.All.SendAsync("ScrollToIndex", side, index);
+        }
+
         public async Task RequestEntries()
         {
             await Clients.Caller.SendAsync("ReloadEntries", SideIdentifier.Left, _entryValueStore.GetEntries(SideIdentifier.Left));
