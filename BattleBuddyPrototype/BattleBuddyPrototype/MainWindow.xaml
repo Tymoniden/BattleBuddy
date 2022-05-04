@@ -1,0 +1,39 @@
+﻿<Window x:Class="BattleBuddyPrototype.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:local="clr-namespace:BattleBuddyPrototype"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Title="MainWindow" Height="1080" Width="1920">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Name="LeftColumn"/>
+            <ColumnDefinition Name="RightColumn"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Orientation="Horizontal" Grid.Column="0">
+            <Button Content="Focus left" Width="100" Click="FocusLeft"></Button>
+            <Button Content="50 / 50" Width="100" Click="ResetView"></Button>
+            <Button Content="Focus right" Width="100" Click="FocusRight"></Button>
+        </StackPanel>
+            
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <Button Content="Get left entries" Width="100" Click="GetEntries"></Button>
+            <Button Content="Send entries" Width="100" Click="SendEntries"></Button>
+            <Button Content="0%" Width="100" Click="ZoomTo0"></Button>
+            <Button Content="100%" Width="100" Click="ZoomTo100"></Button>
+        </StackPanel>
+        
+        
+        <wv2:WebView2 Grid.Row="1" Grid.Column="0" Name="leftWebView" Source="https://rweyrauch.github.io/PrettyScribe/"/>
+        <wv2:WebView2 Grid.Row="1" Grid.Column="1" Name="rightWebView" Source="https://rweyrauch.github.io/PrettyScribe/"/>
+    </Grid>
+</Window>

@@ -1,0 +1,116 @@
+﻿@page "/"
+@using BlazorApp1.Shared
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable
+
+<PageTitle>Index</PageTitle>
+
+<button @onclick="@(e => RequestFocus("left"))">Focus Left</button>
+                <button @onclick="@(e => RequestFocus("none"))">Center</button>
+                <button @onclick="@(e => RequestFocus("right"))">Focus Right</button>
+
+<table style="margin-top:10px;">
+    <tbody>
+        <tr>
+            <td>
+                <ul>
+                    <li @onclick="@(e => ClickEntry(SideIdentifier.Left, "top"))">Top</li>
+                @foreach(var entry in entries[SideIdentifier.Left])
+                {
+                    <li @onclick="@(e => ClickEntry(SideIdentifier.Left, entry))">@entry</li>
+                }
+                    <li @onclick="@(e => ClickEntry(SideIdentifier.Left, "bottom"))">Bottom</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li @onclick="@(e => ClickEntry(SideIdentifier.Right, "top"))">Top</li>
+                @foreach(var entry in entries[SideIdentifier.Right])
+                {
+                    <li @onclick="@(e => ClickEntry(SideIdentifier.Right, entry))">@entry</li>
+                }
+                    <li @onclick="@(e => ClickEntry(SideIdentifier.Right, "bottom"))">Bottom</li>
+                </ul>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<ul id="messagesList">
+    @foreach (var message in messages)
+    {
+        <li>@message</li>
+    }
+</ul>
+
+@code {
+    private HubConnection? hubConnection;
+    private List<string> messages = new List<string>();
+    private Dictionary<SideIdentifier, List<string>> entries = new Dictionary<SideIdentifier, List<string>>
+    {
+        {SideIdentifier.Left , new List<string>{"dummy"} },
+        {SideIdentifier.Right , new List<string>() }
+    };
+    private string? userInput;
+    private string? messageInput;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
+            .Build();
+
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+            var encodedMsg = $"{user}: {message}";
+            messages.Add(encodedMsg);
+            StateHasChanged();
+        });
+
+        hubConnection.On<SideIdentifier, List<string>>("ReloadEntries", (side, newEntries) =>
+        {
+            entries[side] = newEntries;
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
+
+        await hubConnection.SendAsync("RequestEntries");
+    }
+
+    private async Task Send()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("SendMessage", userInput, messageInput);
+        }
+    }
+
+    public async Task ClickEntry(SideIdentifier side, string entry)
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("ScrollTo", side, entry);
+        }
+    }
+
+    public async Task RequestFocus(string target)
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("RequestFocus", target);
+        }
+    }
+
+    public bool IsConnected =>
+        hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+}
