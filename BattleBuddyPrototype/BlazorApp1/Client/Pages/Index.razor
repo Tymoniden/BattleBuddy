@@ -9,36 +9,60 @@
     var rightIndex = 0;
 }
 
+@code
+{
+    int selectedLeftIndex = -1;
+    int selectedRightIndex = -1;
+}
+
 <PageTitle>Index</PageTitle>
 
 <button @onclick="@(e => RequestFocus("left"))">Focus Left</button>
-                <button @onclick="@(e => RequestFocus("none"))">Center</button>
-                <button @onclick="@(e => RequestFocus("right"))">Focus Right</button>
+<button @onclick="@(e => RequestFocus("none"))">Center</button>
+<button @onclick="@(e => RequestFocus("right"))">Focus Right</button>
+<button @onclick="@(e => RequestReload())">Reload</button>
+                
+<style type="text/css">
+    ul.entry-list {
+        list-style-type: none;
+    }
+
+    ul.entry-list li {
+        padding: 5px 10px;
+        background-color: cadetblue;
+        color: white;
+        margin-bottom: 2px;
+    }
+
+    ul.entry-list li.selected {
+        background-color: cornflowerblue
+    }
+</style>
 
 <table style="margin-top:10px;">
     <tbody>
         <tr>
-            <td>
-                <ul>
+            <td style="vertical-align: top">
+                <ul class="entry-list">
                     <li @onclick="@(e => ClickEntry(SideIdentifier.Left, "top"))">Top</li>
                 @foreach(var entry in entries[SideIdentifier.Left])
                 {
                     var index = leftIndex;
                     
-                    <li @onclick="@(e => ScrollToIndex(SideIdentifier.Left, index))">@entry</li>
+                    <li class="@(selectedLeftIndex == index ? "selected" : "")" @onclick="@(e => ScrollToIndex(SideIdentifier.Left, index))">@entry</li>
 
                     leftIndex += 1;
                 }
                     <li @onclick="@(e => ClickEntry(SideIdentifier.Left, "bottom"))">Bottom</li>
                 </ul>
             </td>
-            <td>
-                <ul>
+            <td style="vertical-align: top">
+                <ul class="entry-list">
                     <li @onclick="@(e => ClickEntry(SideIdentifier.Right, "top"))">Top</li>
                 @foreach(var entry in entries[SideIdentifier.Right])
                 {
                     var index = rightIndex;
-                    <li @onclick="@(e => ScrollToIndex(SideIdentifier.Right, index))">@entry</li>
+                    <li class="@(selectedRightIndex == index ? "selected" : "")" @onclick="@(e => ScrollToIndex(SideIdentifier.Right, index))">@entry</li>
 
                     rightIndex += 1;
                 }
@@ -86,6 +110,20 @@
             StateHasChanged();
         });
 
+        hubConnection.On<SideIdentifier, int>("ScrollToIndex", (side, index) =>
+        {
+            if (side == SideIdentifier.Left)
+            {
+                selectedLeftIndex = index;
+            }
+            else
+            {
+                selectedRightIndex = index;
+            }
+
+            StateHasChanged();
+        });
+
         await hubConnection.StartAsync();
 
         await hubConnection.SendAsync("RequestEntries");
@@ -129,6 +167,14 @@
         if (hubConnection is not null)
         {
             await hubConnection.SendAsync("RequestFocus", target);
+        }
+    }
+
+    public async Task RequestReload()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("RequestReload");
         }
     }
 

@@ -97,6 +97,12 @@ namespace BattleBuddyPrototype
                         break;
                 }
             });
+
+            connection.On("SendEntries", async () =>
+            {
+                await SendLeftEntries();
+                await SendRightEntries();
+            });
         }
 
         private void ZoomTo0(object sender, RoutedEventArgs e)
@@ -166,12 +172,17 @@ namespace BattleBuddyPrototype
             rightWebView.CoreWebView2.DOMContentLoaded += CoreWebView2_DOMContentLoaded;
         }
 
-        private void CoreWebView2_DOMContentLoaded(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
+        private async void CoreWebView2_DOMContentLoaded(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
         {
             if(sender is CoreWebView2 webView)
             {
-                webView.ExecuteScriptAsync(JS_SCROLL_FUNCTION);
-                webView.ExecuteScriptAsync(JS_SCROLL_TO_INDEX_FUNCTION);
+                await webView.ExecuteScriptAsync(JS_SCROLL_FUNCTION);
+                await webView.ExecuteScriptAsync(JS_SCROLL_TO_INDEX_FUNCTION);
+
+                if (connection.State == HubConnectionState.Disconnected)
+                {
+                    await connection.StartAsync();
+                }
             }
         }
 

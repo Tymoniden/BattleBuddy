@@ -19,7 +19,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <StackPanel Orientation="Horizontal" Grid.Column="0">
+        <!--<StackPanel Orientation="Horizontal" Grid.Column="0">
             <Button Content="Focus left" Width="100" Click="FocusLeft"></Button>
             <Button Content="50 / 50" Width="100" Click="ResetView"></Button>
             <Button Content="Focus right" Width="100" Click="FocusRight"></Button>
@@ -30,7 +30,7 @@
             <Button Content="Send entries" Width="100" Click="SendEntries"></Button>
             <Button Content="0%" Width="100" Click="ZoomTo0"></Button>
             <Button Content="100%" Width="100" Click="ZoomTo100"></Button>
-        </StackPanel>
+        </StackPanel>-->
         
         
         <wv2:WebView2 Grid.Row="1" Grid.Column="0" Name="leftWebView" Source="https://rweyrauch.github.io/PrettyScribe/"/>
