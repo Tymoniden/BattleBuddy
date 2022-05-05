@@ -133,6 +133,7 @@
     {
         if (hubConnection is not null)
         {
+            await EnsureConnection();
             await hubConnection.SendAsync("SendMessage", userInput, messageInput);
         }
     }
@@ -141,6 +142,7 @@
     {
         if (hubConnection is not null)
         {
+            await EnsureConnection();
             var index = entries[side].IndexOf(entry);
 
             if(index != -1)
@@ -158,6 +160,7 @@
     {
         if (hubConnection is not null)
         {
+            await EnsureConnection();
             await hubConnection.SendAsync("RequestScrollToIndex", side, index);
         }
     }
@@ -166,6 +169,7 @@
     {
         if (hubConnection is not null)
         {
+            await EnsureConnection();
             await hubConnection.SendAsync("RequestFocus", target);
         }
     }
@@ -174,6 +178,7 @@
     {
         if (hubConnection is not null)
         {
+            await EnsureConnection();
             await hubConnection.SendAsync("RequestReload");
         }
     }
@@ -186,6 +191,14 @@
         if (hubConnection is not null)
         {
             await hubConnection.DisposeAsync();
+        }
+    }
+
+    public async ValueTask EnsureConnection()
+    {
+        if (!IsConnected)
+        {
+            await hubConnection.StartAsync();
         }
     }
 }
