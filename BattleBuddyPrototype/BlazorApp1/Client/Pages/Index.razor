@@ -4,6 +4,11 @@
 @inject NavigationManager NavigationManager
 @implements IAsyncDisposable
 
+@{
+    var leftIndex = 0;
+    var rightIndex = 0;
+}
+
 <PageTitle>Index</PageTitle>
 
 <button @onclick="@(e => RequestFocus("left"))">Focus Left</button>
@@ -18,7 +23,11 @@
                     <li @onclick="@(e => ClickEntry(SideIdentifier.Left, "top"))">Top</li>
                 @foreach(var entry in entries[SideIdentifier.Left])
                 {
-                    <li @onclick="@(e => ClickEntry(SideIdentifier.Left, entry))">@entry</li>
+                    var index = leftIndex;
+                    
+                    <li @onclick="@(e => ScrollToIndex(SideIdentifier.Left, index))">@entry</li>
+
+                    leftIndex += 1;
                 }
                     <li @onclick="@(e => ClickEntry(SideIdentifier.Left, "bottom"))">Bottom</li>
                 </ul>
@@ -28,7 +37,10 @@
                     <li @onclick="@(e => ClickEntry(SideIdentifier.Right, "top"))">Top</li>
                 @foreach(var entry in entries[SideIdentifier.Right])
                 {
-                    <li @onclick="@(e => ClickEntry(SideIdentifier.Right, entry))">@entry</li>
+                    var index = rightIndex;
+                    <li @onclick="@(e => ScrollToIndex(SideIdentifier.Right, index))">@entry</li>
+
+                    rightIndex += 1;
                 }
                     <li @onclick="@(e => ClickEntry(SideIdentifier.Right, "bottom"))">Bottom</li>
                 </ul>
@@ -101,6 +113,14 @@
             {
                 await hubConnection.SendAsync("ScrollTo", side, entry);
             }
+        }
+    }
+
+    public async Task ScrollToIndex(SideIdentifier side, int index)
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("RequestScrollToIndex", side, index);
         }
     }
 
