@@ -16,11 +16,6 @@
 }
 
 <PageTitle>Index</PageTitle>
-
-<button @onclick="@(e => RequestFocus("left"))">Focus Left</button>
-<button @onclick="@(e => RequestFocus("none"))">Center</button>
-<button @onclick="@(e => RequestFocus("right"))">Focus Right</button>
-<button @onclick="@(e => RequestReload())">Reload</button>
                 
 <style type="text/css">
     ul.entry-list {
@@ -37,48 +32,72 @@
     ul.entry-list li.selected {
         background-color: cornflowerblue
     }
+
+    div.buttons{
+	    position: fixed;
+	    top: 56px;
+	    background: white;
+	    width: 100%;
+	    padding: 10px 5px;
+    }
+
+    div.entry-table{
+	    margin-top: 105px;
+    }
+
+    article.content{
+        padding: 0 !important;
+    }
+
+    div.sidebar{
+	    position: fixed;
+	    width: 100%;
+    }
 </style>
 
-<table style="margin-top:10px;">
-    <tbody>
-        <tr>
-            <td style="vertical-align: top">
-                <ul class="entry-list">
-                    <li @onclick="@(e => ClickEntry(SideIdentifier.Left, "top"))">Top</li>
-                @foreach(var entry in entries[SideIdentifier.Left])
-                {
-                    var index = leftIndex;
+<div class="buttons">
+    <button @onclick="@(e => RequestFocus("left"))">Focus Left</button>
+<button @onclick="@(e => RequestFocus("none"))">Center</button>
+<button @onclick="@(e => RequestFocus("right"))">Focus Right</button>
+<button @onclick="@(e => RequestReload())">Reload</button>
+</div>
+
+
+<div class="entry-table">
+    <table style="margin-top:10px;">
+        <tbody>
+            <tr>
+                <td style="vertical-align: top">
+                    <ul class="entry-list">
+                        <li @onclick="@(e => ClickEntry(SideIdentifier.Left, "top"))">Top</li>
+                    @foreach(var entry in entries[SideIdentifier.Left])
+                    {
+                        var index = leftIndex;
                     
-                    <li class="@(selectedLeftIndex == index ? "selected" : "")" @onclick="@(e => ScrollToIndex(SideIdentifier.Left, index))">@entry</li>
+                        <li class="@(selectedLeftIndex == index ? "selected" : "")" @onclick="@(e => ScrollToIndex(SideIdentifier.Left, index))">@entry</li>
 
-                    leftIndex += 1;
-                }
-                    <li @onclick="@(e => ClickEntry(SideIdentifier.Left, "bottom"))">Bottom</li>
-                </ul>
-            </td>
-            <td style="vertical-align: top">
-                <ul class="entry-list">
-                    <li @onclick="@(e => ClickEntry(SideIdentifier.Right, "top"))">Top</li>
-                @foreach(var entry in entries[SideIdentifier.Right])
-                {
-                    var index = rightIndex;
-                    <li class="@(selectedRightIndex == index ? "selected" : "")" @onclick="@(e => ScrollToIndex(SideIdentifier.Right, index))">@entry</li>
+                        leftIndex += 1;
+                    }
+                        <li @onclick="@(e => ClickEntry(SideIdentifier.Left, "bottom"))">Bottom</li>
+                    </ul>
+                </td>
+                <td style="vertical-align: top">
+                    <ul class="entry-list">
+                        <li @onclick="@(e => ClickEntry(SideIdentifier.Right, "top"))">Top</li>
+                    @foreach(var entry in entries[SideIdentifier.Right])
+                    {
+                        var index = rightIndex;
+                        <li class="@(selectedRightIndex == index ? "selected" : "")" @onclick="@(e => ScrollToIndex(SideIdentifier.Right, index))">@entry</li>
 
-                    rightIndex += 1;
-                }
-                    <li @onclick="@(e => ClickEntry(SideIdentifier.Right, "bottom"))">Bottom</li>
-                </ul>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<ul id="messagesList">
-    @foreach (var message in messages)
-    {
-        <li>@message</li>
-    }
-</ul>
+                        rightIndex += 1;
+                    }
+                        <li @onclick="@(e => ClickEntry(SideIdentifier.Right, "bottom"))">Bottom</li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 @code {
     private HubConnection? hubConnection;
@@ -133,6 +152,7 @@
     {
         if (hubConnection is not null)
         {
+            await EnsureConnection();
             await hubConnection.SendAsync("SendMessage", userInput, messageInput);
         }
     }
@@ -141,6 +161,7 @@
     {
         if (hubConnection is not null)
         {
+            await EnsureConnection();
             var index = entries[side].IndexOf(entry);
 
             if(index != -1)
@@ -158,6 +179,7 @@
     {
         if (hubConnection is not null)
         {
+            await EnsureConnection();
             await hubConnection.SendAsync("RequestScrollToIndex", side, index);
         }
     }
@@ -166,6 +188,7 @@
     {
         if (hubConnection is not null)
         {
+            await EnsureConnection();
             await hubConnection.SendAsync("RequestFocus", target);
         }
     }
@@ -174,6 +197,7 @@
     {
         if (hubConnection is not null)
         {
+            await EnsureConnection();
             await hubConnection.SendAsync("RequestReload");
         }
     }
@@ -186,6 +210,14 @@
         if (hubConnection is not null)
         {
             await hubConnection.DisposeAsync();
+        }
+    }
+
+    public async ValueTask EnsureConnection()
+    {
+        if (!IsConnected)
+        {
+            await hubConnection.StartAsync();
         }
     }
 }
