@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BattleBuddy.ViewModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BattleBuddy
 {
@@ -23,6 +11,20 @@ namespace BattleBuddy
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void OnWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            DataContext = new MainViewModel();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //HotKeyControl.Visibility = HotKeyControl.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+            if(DataContext is MainViewModel viewModel)
+            {
+                viewModel.IsHotKeyPanelVisible = !viewModel.IsHotKeyPanelVisible;
+            }
         }
     }
 }

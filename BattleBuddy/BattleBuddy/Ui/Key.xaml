@@ -1,0 +1,19 @@
+﻿<UserControl 
+    x:Name="KeyControl"
+            x:Class="BattleBuddy.Ui.Key"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BattleBuddy.Ui"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance local:Key}"
+             d:DesignHeight="30" d:DesignWidth="70">
+    <Grid>
+        <Border Grid.Row="1" Grid.Column="1" Background="DarkGray" Padding="3" CornerRadius="3">
+            <Border Background="LightGray" BorderThickness="1" BorderBrush="White" Padding="3" CornerRadius="3">
+                <TextBlock Text="{Binding KeyName, ElementName=KeyControl}" HorizontalAlignment="Center"/>
+            </Border>
+        </Border> 
+    </Grid>
+</UserControl>
