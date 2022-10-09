@@ -36,6 +36,6 @@
         </DataTemplate>
     </UserControl.Resources>
     <StackPanel d:DataContext="{d:DesignInstance viewModel:MainViewModel}">
-        <ItemsControl ItemsSource="{Binding HotKeys}" />
+        <ItemsControl ItemsSource="{Binding HotKeysPanelViewModel.HotKeys}" />
     </StackPanel>
 </UserControl>

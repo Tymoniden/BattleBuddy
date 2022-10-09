@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BattleBuddy.Services;
+using SimpleInjector;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +15,11 @@ namespace BattleBuddy
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            var container = new Container();
+            ContainerService.SetupContainer(container);
+            ServiceLocatorService.RegisterContainer(container);
+        }
     }
 }

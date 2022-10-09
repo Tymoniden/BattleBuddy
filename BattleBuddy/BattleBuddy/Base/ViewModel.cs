@@ -39,13 +39,18 @@ namespace BattleBuddy.Base
             if (!_propertyValues.ContainsKey(propertyName))
             {
                 _propertyValues.Add(propertyName, value);
-            }
-            else
-            {
-                _propertyValues[propertyName] = value;
+                NotifyPropertyChanged(propertyName);
+                return;
             }
 
-            
+            if (_propertyValues[propertyName].Equals(value))
+            {
+                return;
+            }
+
+            _propertyValues[propertyName] = value;
+            NotifyPropertyChanged(propertyName);
+
         }
 
         protected void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)

@@ -1,5 +1,7 @@
-﻿using BattleBuddy.ViewModel;
+﻿using BattleBuddy.Services;
+using BattleBuddy.ViewModel;
 using System.Windows;
+using System.Windows.Input;
 
 namespace BattleBuddy
 {
@@ -15,16 +17,22 @@ namespace BattleBuddy
 
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-            DataContext = new MainViewModel();
+            var mainViewModel = ServiceLocatorService.GetInstance<MainViewModel>();
+            mainViewModel.Setup();
+            DataContext = mainViewModel;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //HotKeyControl.Visibility = HotKeyControl.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
             if(DataContext is MainViewModel viewModel)
             {
-                viewModel.IsHotKeyPanelVisible = !viewModel.IsHotKeyPanelVisible;
+                viewModel.HotKeysPanelViewModel.IsHotKeyPanelVisible = !viewModel.HotKeysPanelViewModel.IsHotKeyPanelVisible;
             }
+        }
+
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            ServiceLocatorService.GetInstance<IHotKeyService>().ExecuteHotkey(e.Key, Keyboard.Modifiers);
         }
     }
 }

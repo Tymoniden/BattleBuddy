@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Loaded="OnWindowLoaded"
         d:DataContext="{d:DesignInstance viewmodel:MainViewModel}"
+        PreviewKeyDown="Window_PreviewKeyDown"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -26,7 +27,7 @@
                 <Style TargetType="ui:HotKeyControl">
                     <Setter Property="Visibility" Value="Collapsed" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsHotKeyPanelVisible, RelativeSource={RelativeSource AncestorType=viewmodel:MainViewModel}}" Value="True">
+                        <DataTrigger Binding="{Binding HotKeysPanelViewModel.IsHotKeyPanelVisible}" Value="True">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>
