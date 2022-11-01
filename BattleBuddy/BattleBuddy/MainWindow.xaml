@@ -35,9 +35,9 @@
             </ui:HotKeyControl.Style>
         </ui:HotKeyControl>
 
-        <ui:ClientConnectionOverlay Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="3" DataContext="{Binding ClientConnectionOverlayViewModel}">
-            <ui:ClientConnectionOverlay.Style>
-                <Style TargetType="ui:ClientConnectionOverlay">
+        <ui:ClientEndpointOverlay Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="3" DataContext="{Binding ClientConnectionOverlayViewModel}">
+            <ui:ClientEndpointOverlay.Style>
+                <Style TargetType="ui:ClientEndpointOverlay">
                     <Setter Property="Visibility" Value="Collapsed" />
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsVisible}" Value="True">
@@ -45,7 +45,7 @@
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </ui:ClientConnectionOverlay.Style>
-        </ui:ClientConnectionOverlay>
+            </ui:ClientEndpointOverlay.Style>
+        </ui:ClientEndpointOverlay>
     </Grid>
 </Window>
