@@ -17,6 +17,7 @@ namespace BattleBuddy.Services
             container.RegisterSingleton<IHotKeyRegistrationService, HotKeyRegistrationService>();
             container.RegisterSingleton<IClientEndpointService, ClientEndpointService>();
             container.RegisterSingleton<INetworkService, NetworkService>();
+            container.RegisterSingleton<IQRCodeService, QRCodeService>();
         }
     }
 }

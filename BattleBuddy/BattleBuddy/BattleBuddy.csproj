@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="QRCoderNetCore" Version="1.0.0" />
     <PackageReference Include="SimpleInjector" Version="5.4.1" />
   </ItemGroup>
 

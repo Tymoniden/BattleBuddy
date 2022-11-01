@@ -22,14 +22,6 @@ namespace BattleBuddy
             DataContext = mainViewModel;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if(DataContext is MainViewModel viewModel)
-            {
-                viewModel.HotKeysPanelViewModel.IsHotKeyPanelVisible = !viewModel.HotKeysPanelViewModel.IsHotKeyPanelVisible;
-            }
-        }
-
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             ServiceLocatorService.GetInstance<IHotKeyService>().ExecuteHotkey(e.Key, Keyboard.Modifiers);
