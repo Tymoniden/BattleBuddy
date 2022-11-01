@@ -1,11 +1,6 @@
 ﻿using BattleBuddy.ViewModel;
 using BattleBuddy.ViewModels;
 using SimpleInjector;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BattleBuddy.Services
 {
@@ -18,7 +13,10 @@ namespace BattleBuddy.Services
             container.RegisterSingleton<MainViewModel>();
             container.RegisterSingleton<HotKeysPanelViewModel>();
             container.RegisterSingleton<RosterDisplayViewModel>();
+            container.RegisterSingleton<ClientConnectionOverlayViewModel>();
             container.RegisterSingleton<IHotKeyRegistrationService, HotKeyRegistrationService>();
+            container.RegisterSingleton<IClientEndpointService, ClientEndpointService>();
+            container.RegisterSingleton<INetworkService, NetworkService>();
         }
     }
 }

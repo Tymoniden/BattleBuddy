@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace BattleBuddy.Base
@@ -13,11 +8,11 @@ namespace BattleBuddy.Base
         private readonly Action _action;
         private readonly Func<bool> _canExecuteAction;
 
-        public Command(Action action, Func<bool> canExecuteAction = null)
+        public Command(Action action, Func<bool>? canExecuteAction = null)
         {
             _action = action;
 
-            if(_canExecuteAction == null)
+            if(_canExecuteAction == null || canExecuteAction == null)
             {
                 _canExecuteAction = () => true;
             }
