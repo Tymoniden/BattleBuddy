@@ -13,7 +13,7 @@ namespace BattleBuddy.Services
             container.RegisterSingleton<MainViewModel>();
             container.RegisterSingleton<HotKeysPanelViewModel>();
             container.RegisterSingleton<RosterDisplayViewModel>();
-            container.RegisterSingleton<ClientConnectionOverlayViewModel>();
+            container.RegisterSingleton<ClientEndpointOverlayViewModel>();
             container.RegisterSingleton<IHotKeyRegistrationService, HotKeyRegistrationService>();
             container.RegisterSingleton<IClientEndpointService, ClientEndpointService>();
             container.RegisterSingleton<INetworkService, NetworkService>();

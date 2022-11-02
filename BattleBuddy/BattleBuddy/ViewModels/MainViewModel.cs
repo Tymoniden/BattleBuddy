@@ -4,20 +4,20 @@ namespace BattleBuddy.ViewModel
 {
     public sealed class MainViewModel : Base.ViewModel
     {
-        public MainViewModel(HotKeysPanelViewModel hotKeysPanelViewModel, ClientConnectionOverlayViewModel clientConnectionOverlayViewModel)
+        public MainViewModel(HotKeysPanelViewModel hotKeysPanelViewModel, ClientEndpointOverlayViewModel clientEndpointOverlayViewModel)
         {
             HotKeysPanelViewModel = hotKeysPanelViewModel ?? throw new System.ArgumentNullException(nameof(hotKeysPanelViewModel));
-            ClientConnectionOverlayViewModel = clientConnectionOverlayViewModel ?? throw new System.ArgumentNullException(nameof(clientConnectionOverlayViewModel));
+            ClientEndpointOverlayViewModel = clientEndpointOverlayViewModel ?? throw new System.ArgumentNullException(nameof(clientEndpointOverlayViewModel));
         }
 
         public HotKeysPanelViewModel HotKeysPanelViewModel { get; }
 
-        public ClientConnectionOverlayViewModel ClientConnectionOverlayViewModel { get; }
+        public ClientEndpointOverlayViewModel ClientEndpointOverlayViewModel { get; }
 
         public async void Setup()
         {
             HotKeysPanelViewModel.Setup();
-            await ClientConnectionOverlayViewModel.Setup();
+            await ClientEndpointOverlayViewModel.Setup();
         }
     }
 }

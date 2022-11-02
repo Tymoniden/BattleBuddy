@@ -35,7 +35,7 @@
             </ui:HotKeyControl.Style>
         </ui:HotKeyControl>
 
-        <ui:ClientEndpointOverlay Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="3" DataContext="{Binding ClientConnectionOverlayViewModel}">
+        <ui:ClientEndpointOverlay Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="3" DataContext="{Binding ClientEndpointOverlayViewModel}">
             <ui:ClientEndpointOverlay.Style>
                 <Style TargetType="ui:ClientEndpointOverlay">
                     <Setter Property="Visibility" Value="Collapsed" />

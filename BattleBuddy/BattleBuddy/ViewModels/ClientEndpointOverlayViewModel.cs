@@ -11,12 +11,12 @@ using System.Windows.Media.Imaging;
 
 namespace BattleBuddy.ViewModels
 {
-    public class ClientConnectionOverlayViewModel : Base.ViewModel
+    public class ClientEndpointOverlayViewModel : Base.ViewModel
     {
         private readonly IClientEndpointService _clientEndpointService;
         private readonly IQRCodeService _qRCodeService;
 
-        public ClientConnectionOverlayViewModel(IHotKeyRegistrationService hotKeyRegistrationService, IClientEndpointService clientEndpointService, IQRCodeService qRCodeService)
+        public ClientEndpointOverlayViewModel(IHotKeyRegistrationService hotKeyRegistrationService, IClientEndpointService clientEndpointService, IQRCodeService qRCodeService)
         {
             if (hotKeyRegistrationService is null)
             {
@@ -84,7 +84,7 @@ namespace BattleBuddy.ViewModels
                 Endpoints.Add(endpoint);
             }
 
-            if (Endpoints.Any() && SelectedEndpoint == null)
+            if (Endpoints.Any() && string.IsNullOrEmpty(SelectedEndpoint))
             {
                 Application.Current.Dispatcher.Invoke(() => SelectedEndpoint = Endpoints.First());
             }
