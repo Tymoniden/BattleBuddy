@@ -1,11 +1,5 @@
 ﻿using BattleBuddy.Services;
 using SimpleInjector;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BattleBuddy
@@ -20,6 +14,11 @@ namespace BattleBuddy
             var container = new Container();
             ContainerService.SetupContainer(container);
             ServiceLocatorService.RegisterContainer(container);
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            ServiceLocatorService.GetInstance<IApplicationEnvironmentService>().ShutdownEnvironment();
         }
     }
 }

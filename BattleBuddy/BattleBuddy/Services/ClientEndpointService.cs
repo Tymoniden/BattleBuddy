@@ -6,39 +6,26 @@ namespace BattleBuddy.Services
 {
     public class ClientEndpointService : IClientEndpointService
     {
+        private readonly IConfigurationService _configurationService;
         private readonly INetworkService _networkService;
-        private int _port;
 
-        public ClientEndpointService(INetworkService networkService)
+        public ClientEndpointService(IConfigurationService configurationService, INetworkService networkService)
         {
-            _networkService = networkService ?? throw new System.ArgumentNullException(nameof(networkService));
+            _configurationService = configurationService ?? throw new ArgumentNullException(nameof(configurationService));
+            _networkService = networkService ?? throw new ArgumentNullException(nameof(networkService));
         }
 
         public async Task<List<string>> GetEndpointOptions()
         {
             var endpoints = new List<string>();
-
-            if (_port == 0)
-            {
-                return endpoints;
-            }
+            var port = _configurationService.GetGlobalConfiguration().WebAppPort;
 
             foreach (var endpoint in await _networkService.GetIpAdresses())
             {
-                endpoints.Add($"http://{endpoint}:{_port}");
+                endpoints.Add($"http://{endpoint}:{port}");
             }
 
             return endpoints;
-        }
-
-        public void SetPort(int port)
-        {
-            if (port <= 0 || port > 65536)
-            {
-                throw new ArgumentOutOfRangeException($"Port number has to be between 0 and 65536");
-            }
-
-            _port = port;
         }
     }
 }

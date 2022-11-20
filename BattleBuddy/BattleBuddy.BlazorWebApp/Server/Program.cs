@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.ResponseCompression;
+using BattleBuddy.BlazorWebApp.Shared.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +8,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
+
+var port = new CommandLineArgumentService().GetPort(args);
+if (port != null)
+{
+    app.Urls.Add($"http://localhost:{port}");
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

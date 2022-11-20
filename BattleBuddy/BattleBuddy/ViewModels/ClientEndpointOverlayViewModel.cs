@@ -25,7 +25,6 @@ namespace BattleBuddy.ViewModels
 
             _clientEndpointService = clientEndpointService ?? throw new ArgumentNullException(nameof(clientEndpointService));
             _qRCodeService = qRCodeService ?? throw new ArgumentNullException(nameof(qRCodeService));
-            _clientEndpointService.SetPort(500);
             hotKeyRegistrationService.RegisterHotKey(Key.F5, ModifierKeys.None, "Display connection options", () => IsVisible = !IsVisible);
         }
 

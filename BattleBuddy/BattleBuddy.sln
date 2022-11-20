@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleBuddy.Shared", "Battl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleBuddy.SignalRServer", "BattleBuddy.SignalRServer\BattleBuddy.SignalRServer.csproj", "{AC8FB4B1-F872-40E5-A729-C90F89DAB384}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleBuddy.BlazorWebApp.Client", "..\..\..\..\Users\Steib\OneDrive - prodot GmbH\Documents\GitHub\BattleBuddy\BattleBuddy\BattleBuddy.BlazorWebApp\Client\BattleBuddy.BlazorWebApp.Client.csproj", "{10C744CE-96B5-4AE0-881E-53EEC3A281B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleBuddy.BlazorWebApp.Client", "BattleBuddy.BlazorWebApp\Client\BattleBuddy.BlazorWebApp.Client.csproj", "{10C744CE-96B5-4AE0-881E-53EEC3A281B1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleBuddy.BlazorWebApp.Server", "..\..\..\..\Users\Steib\OneDrive - prodot GmbH\Documents\GitHub\BattleBuddy\BattleBuddy\BattleBuddy.BlazorWebApp\Server\BattleBuddy.BlazorWebApp.Server.csproj", "{CB0E6750-D7D7-419A-9797-BBF8B2CE503B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleBuddy.BlazorWebApp.Server", "BattleBuddy.BlazorWebApp\Server\BattleBuddy.BlazorWebApp.Server.csproj", "{CB0E6750-D7D7-419A-9797-BBF8B2CE503B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleBuddy.BlazorWebApp.Shared", "..\..\..\..\Users\Steib\OneDrive - prodot GmbH\Documents\GitHub\BattleBuddy\BattleBuddy\BattleBuddy.BlazorWebApp\Shared\BattleBuddy.BlazorWebApp.Shared.csproj", "{5D48ADA9-3403-4C71-9990-A5CBA1D073B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleBuddy.BlazorWebApp.Shared", "BattleBuddy.BlazorWebApp\Shared\BattleBuddy.BlazorWebApp.Shared.csproj", "{5D48ADA9-3403-4C71-9990-A5CBA1D073B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

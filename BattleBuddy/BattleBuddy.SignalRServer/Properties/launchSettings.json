@@ -2,7 +2,7 @@
   "profiles": {
     "BattleBuddy.SignalRServer": {
       "commandName": "Project",
-      "commandLineArgs": "55555",
+      "commandLineArgs": "5010",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

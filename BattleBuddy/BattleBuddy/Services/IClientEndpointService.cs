@@ -6,6 +6,5 @@ namespace BattleBuddy.Services
     public interface IClientEndpointService
     {
         Task<List<string>> GetEndpointOptions();
-        void SetPort(int port);
     }
 }

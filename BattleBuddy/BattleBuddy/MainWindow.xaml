@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:BattleBuddy" xmlns:ui="clr-namespace:BattleBuddy.Ui" xmlns:viewmodel="clr-namespace:BattleBuddy.ViewModel"
         mc:Ignorable="d"
         Loaded="OnWindowLoaded"
+        WindowState="Maximized"
         d:DataContext="{d:DesignInstance viewmodel:MainViewModel}"
         PreviewKeyDown="Window_PreviewKeyDown"
         Title="MainWindow" Height="450" Width="800">

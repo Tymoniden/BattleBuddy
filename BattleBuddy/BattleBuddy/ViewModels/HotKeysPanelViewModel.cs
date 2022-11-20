@@ -11,11 +11,13 @@ namespace BattleBuddy.ViewModels
     {
         private readonly IHotKeyRegistrationService _hotKeyRegistrationService;
         private readonly IHotKeyService _hotKeyService;
+        private readonly IWindowModeService _windowModeService;
 
-        public HotKeysPanelViewModel(IHotKeyRegistrationService hotKeyRegistrationService, IHotKeyService hotKeyService)
+        public HotKeysPanelViewModel(IHotKeyRegistrationService hotKeyRegistrationService, IHotKeyService hotKeyService, IWindowModeService windowModeService)
         {
             _hotKeyRegistrationService = hotKeyRegistrationService ?? throw new System.ArgumentNullException(nameof(hotKeyRegistrationService));
             _hotKeyService = hotKeyService ?? throw new System.ArgumentNullException(nameof(hotKeyService));
+            _windowModeService = windowModeService ?? throw new System.ArgumentNullException(nameof(windowModeService));
         }
 
         public ObservableCollection<HotKeyViewModel> HotKeys { get; set; } = new ObservableCollection<HotKeyViewModel>();
@@ -30,6 +32,10 @@ namespace BattleBuddy.ViewModels
                 }
 
                 IsHotKeyPanelVisible = !IsHotKeyPanelVisible;
+            });
+
+            _hotKeyRegistrationService.RegisterHotKey(Key.F11, ModifierKeys.None, "Toggle Fullscreen", () => {
+                _windowModeService.ToogleFullscreen();
             });
         }
 
