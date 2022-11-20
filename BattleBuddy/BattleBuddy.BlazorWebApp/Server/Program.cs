@@ -1,3 +1,4 @@
+using BattleBuddy.BlazorWebApp.Server.Services;
 using BattleBuddy.BlazorWebApp.Shared.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddBattleBuddyServices();
 
 var app = builder.Build();
 

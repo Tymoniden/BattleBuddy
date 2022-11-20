@@ -1,9 +1,60 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>List view</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="buttons">
+    <button @onclick="@(e => RequestFocus("left"))">Focus Left</button>
+    <button @onclick="@(e => RequestFocus("none"))">Center</button>
+    <button @onclick="@(e => RequestFocus("right"))">Focus Right</button>
+    <button @onclick="@(e => RequestReload())">Reload</button>
+</div>
 
-Welcome to your new app.
+@code{
+    int leftIndex = 0;
+    int rightIndex = 0;
+    int selectedLeftIndex = -1;
+    int selectedRightIndex = -1;
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    public bool IsConnected() => hubConnection?.State == HubConnectionState.Connected;
+
+    public async Task RequestFocus(string target)
+    {
+        if (!IsConnected())
+        {
+            return;
+        }
+
+        await EnsureConnection();
+        await hubConnection.SendAsync("RequestFocus", target);
+        
+    }
+
+    public async Task RequestReload()
+    {
+        if (!IsConnected())
+        {
+            return;
+        }
+
+        await EnsureConnection();
+        await hubConnection.SendAsync("RequestReload");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+
+    public async ValueTask EnsureConnection()
+    {
+        if (IsConnected())
+        {
+            return;
+        }
+
+        await hubConnection.StartAsync();
+    }
+}
