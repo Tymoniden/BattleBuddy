@@ -14,15 +14,6 @@ namespace BattleBuddy.Services
         public RosterDisplayViewModel(IHotKeyRegistrationService hotKeyRegistrationService)
         {
             _hotKeyRegistrationService = hotKeyRegistrationService ?? throw new ArgumentNullException(nameof(hotKeyRegistrationService));
-
-            _hotKeyRegistrationService.RegisterHotKey(Key.F5, ModifierKeys.None, "Expand left Roster", ExpandLeftRoster);
-            _hotKeyRegistrationService.RegisterHotKey(Key.F6, ModifierKeys.None, "justify Rosters", ExpandLeftRoster);
-            _hotKeyRegistrationService.RegisterHotKey(Key.F7, ModifierKeys.None, "Expand right Roster", ExpandLeftRoster);
-        }
-
-        public void ExpandLeftRoster()
-        {
-
         }
     }
 }

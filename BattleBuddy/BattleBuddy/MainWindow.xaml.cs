@@ -1,5 +1,6 @@
 ﻿using BattleBuddy.Services;
 using BattleBuddy.ViewModel;
+using System;
 using System.Windows;
 using System.Windows.Input;
 
@@ -21,7 +22,36 @@ namespace BattleBuddy
             mainViewModel.Setup();
             ServiceLocatorService.GetInstance<IApplicationEnvironmentService>().SetupEnvironment();
             ServiceLocatorService.GetInstance<IWindowModeService>().StateChangeEvent += StateChangeEvent;
+            ServiceLocatorService.GetInstance<IWindowLayoutService>().WindowLayoutChanged += WindowLayoutChanged;
+            
             DataContext = mainViewModel;
+        }
+
+        private void WindowLayoutChanged(object? sender, EventArgs e)
+        {
+            if(e is WindowLayoutEventArgs eventArgs)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    switch (eventArgs.NewLayout)
+                    {
+                        case WindowLayoutType.ExtendLeft:
+                            LeftColumn.Width = new GridLength(2, GridUnitType.Star);
+                            RightColumn.Width = new GridLength(1, GridUnitType.Star);
+                            break;
+
+                        case WindowLayoutType.ExtendRight:
+                            LeftColumn.Width = new GridLength(1, GridUnitType.Star);
+                            RightColumn.Width = new GridLength(2, GridUnitType.Star);
+                            break;
+
+                        case WindowLayoutType.Justify:
+                            LeftColumn.Width = new GridLength(1, GridUnitType.Star);
+                            RightColumn.Width = new GridLength(1, GridUnitType.Star);
+                            break;
+                    }
+                });
+            }
         }
 
         private void StateChangeEvent(object? sender, System.EventArgs e)

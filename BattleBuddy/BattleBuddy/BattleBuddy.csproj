@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1418.22" />
     <PackageReference Include="QRCoderNetCore" Version="1.0.0" />
     <PackageReference Include="SimpleInjector" Version="5.4.1" />
   </ItemGroup>

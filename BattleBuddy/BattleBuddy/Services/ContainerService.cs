@@ -24,6 +24,8 @@ namespace BattleBuddy.Services
             container.RegisterSingleton<IProcessEnvironmentService, ProcessEnvironmentService>();
             container.RegisterSingleton<IApplicationEnvironmentService, ApplicationEnvironmentService>();
             container.RegisterSingleton<IWindowModeService, WindowModeService>();
+            container.RegisterSingleton<IOverlayManager, OverlayManager>();
+            container.RegisterSingleton<IWindowLayoutService, WindowLayoutService>();
         }
     }
 }

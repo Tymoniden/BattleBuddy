@@ -6,7 +6,7 @@ namespace BattleBuddy.Services
 {
     public class SignalRService : ISignalRService
     {
-        HubConnection _connection;
+        HubConnection? _connection;
 
         public void Connect(int port, string hub)
         {
@@ -33,7 +33,7 @@ namespace BattleBuddy.Services
                 return;
             }
 
-            _connection.On(method, callback);
+            _connection?.On(method, callback);
         }
 
         public void RegisterCallback<T1>(string method, Action<T1> callback)
@@ -43,7 +43,7 @@ namespace BattleBuddy.Services
                 return;
             }
 
-            _connection.On(method, callback);
+            _connection?.On(method, callback);
         }
 
         public void RegisterCallback<T1>(string method, Func<T1, Task> callback)
@@ -53,7 +53,7 @@ namespace BattleBuddy.Services
                 return;
             }
 
-            _connection.On(method, callback);
+            _connection?.On(method, callback);
         }
 
         public void RegisterCallback<T1, T2>(string method, Func<T1, T2, Task> callback)
@@ -63,7 +63,7 @@ namespace BattleBuddy.Services
                 return;
             }
 
-            _connection.On(method, callback);
+            _connection?.On(method, callback);
         }
 
         public void RegisterCallback<T1, T2>(string method, Action<T1, T2> callback)
@@ -73,7 +73,7 @@ namespace BattleBuddy.Services
                 return;
             }
 
-            _connection.On(method, callback);
+            _connection?.On(method, callback);
         }
 
         bool IsConnected()
