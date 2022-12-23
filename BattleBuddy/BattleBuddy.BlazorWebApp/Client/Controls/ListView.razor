@@ -1,0 +1,30 @@
+﻿@using BattleBuddy.BlazorWebApp.Client.Services;
+
+@inject IListViewEntryProvider listViewEntryProvider
+@inject IListViewInteractionFacade listViewInteractionFacade;
+
+<ul class="entry-list">
+    <li @onclick="@(e => ScrollToPercentage(0))">Top</li>
+    @foreach (var entry in listViewEntryProvider.GetLists(ListViewIdentifier))
+    {
+        <li class="@(entry.Equals(SelectedViewModel) ? "selected" : "")" @onclick="@(e => ScrollToEntry(entry))">@entry.Name</li>
+    }
+    <li @onclick="@(e => ScrollToPercentage(100))">Bottom</li>
+</ul>
+
+@code {
+    [Parameter]
+    public ListViewIdentifier ListViewIdentifier { get; set; }
+
+    public ListViewEntryViewModel? SelectedViewModel { get; set; }
+
+    async Task ScrollToEntry(ListViewEntryViewModel listViewEntryViewModel)
+    {
+        await listViewInteractionFacade.ScrollToEntry(ListViewIdentifier, listViewEntryViewModel.Index);
+    }
+
+    async Task ScrollToPercentage(int percentage)
+    {
+        await listViewInteractionFacade.ScrollToPercentage(ListViewIdentifier, percentage);
+    }
+}

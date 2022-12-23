@@ -15,6 +15,7 @@ var port = new CommandLineArgumentService().GetPort(args);
 if (port != null)
 {
     app.Urls.Add($"http://localhost:{port}");
+    app.Urls.Add($"http://0.0.0.0:{port}");
 }
 
 // Configure the HTTP request pipeline.

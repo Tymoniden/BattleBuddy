@@ -1,60 +1,123 @@
 ﻿@page "/"
+@using BattleBuddy.BlazorWebApp.Client.Services;
+@using BattleBuddy.BlazorWebApp.Shared.Enums;
+
+@inject IListViewInteractionFacade listViewInteractionFacade;
 
 <PageTitle>List view</PageTitle>
 
+<style type="text/css">
+    /* page */
+    article.content{
+        padding-top: 0.5rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+
+    /* buttons */
+    div.buttons{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    button.button {
+        width: 72px;
+        background-size: 70px;
+        height: 48px;
+        background-color: transparent;
+        border: 0px;
+    }
+
+        button.button.active{
+            border: 1px solid black;
+            border-radius: 7px;
+        }
+
+        button.button.focus-left{
+                background-image: url("Images/Icons/focus_left_button.png");
+        }
+
+        button.button.focus-right {
+            background-image: url("Images/Icons/focus_right_button.png");
+        }
+
+        button.button.justify {
+            background-image: url("Images/Icons/justify_button.png");
+        }
+
+        button.button.refresh {
+            background-image: url("Images/Icons/refresh_button.png");
+        }
+
+    /* Entry table */
+    div.entry-table {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+        div.entry-table ul{
+            list-style-type: none;
+            padding: 0px;
+        }
+
+            div.entry-table ul li{
+                width: 150px;
+                padding: 5px 10px;
+                background-color: cadetblue;
+                color: white;
+                margin-bottom: 2px;
+            }
+
+                div.entry-table ul li.selected{
+                    background-color: cornflowerblue;
+                }
+</style>
+
 <div class="buttons">
-    <button @onclick="@(e => RequestFocus("left"))">Focus Left</button>
-    <button @onclick="@(e => RequestFocus("none"))">Center</button>
-    <button @onclick="@(e => RequestFocus("right"))">Focus Right</button>
-    <button @onclick="@(e => RequestReload())">Reload</button>
+    <button class="button focus-left" @onclick="@(e => RequestFocus(ExpansionTarget.Left))"></button>
+    <button class="button justify" @onclick="@(e => RequestFocus(ExpansionTarget.None))"></button>
+    <button class="button focus-right" @onclick="@(e => RequestFocus(ExpansionTarget.Right))"></button>
+    <button class="button refresh" @onclick="@(e => RequestReload())"></button>
 </div>
 
+<div class="entry-table">
+    <BattleBuddy.BlazorWebApp.Client.Controls.ListView ListViewIdentifier="ListViewIdentifier.Left" />
+    <BattleBuddy.BlazorWebApp.Client.Controls.ListView ListViewIdentifier="ListViewIdentifier.Right" />
+</div>
+
+@*<div class="entry-table">
+    <table style="margin-top:10px;">
+        <tbody>
+            <tr>
+                <td style="vertical-align: top">
+                    <BattleBuddy.BlazorWebApp.Client.Controls.ListView ListViewIdentifier="ListViewIdentifier.Left"/>
+                </td>
+                <td style="vertical-align: top">
+                    <BattleBuddy.BlazorWebApp.Client.Controls.ListView ListViewIdentifier="ListViewIdentifier.Right" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>*@
+
 @code{
-    int leftIndex = 0;
-    int rightIndex = 0;
-    int selectedLeftIndex = -1;
-    int selectedRightIndex = -1;
-
-    public bool IsConnected() => hubConnection?.State == HubConnectionState.Connected;
-
-    public async Task RequestFocus(string target)
+    async Task RequestFocus(ExpansionTarget target)
     {
-        if (!IsConnected())
+        switch (target)
         {
-            return;
-        }
-
-        await EnsureConnection();
-        await hubConnection.SendAsync("RequestFocus", target);
-        
-    }
-
-    public async Task RequestReload()
-    {
-        if (!IsConnected())
-        {
-            return;
-        }
-
-        await EnsureConnection();
-        await hubConnection.SendAsync("RequestReload");
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (hubConnection is not null)
-        {
-            await hubConnection.DisposeAsync();
+            case ExpansionTarget.Left:
+                await listViewInteractionFacade.ExpandLeft();
+                break;
+            case ExpansionTarget.Right:
+                await listViewInteractionFacade.ExpandRight();
+                break;
+            case ExpansionTarget.None:
+                await listViewInteractionFacade.JustifyBoth();
+                break;
         }
     }
 
-    public async ValueTask EnsureConnection()
-    {
-        if (IsConnected())
-        {
-            return;
-        }
-
-        await hubConnection.StartAsync();
-    }
+    async Task RequestReload() => await listViewInteractionFacade.ReloadLists();
 }
