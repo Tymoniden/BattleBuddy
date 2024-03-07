@@ -1,0 +1,44 @@
+﻿@page "/score"
+@using BattleBuddy.WebApp.Services
+@inject ScoreService ScoreService
+@inject Services.Score GameScore
+
+<PageTitle>Score</PageTitle>
+
+<p>This is the score</p>
+
+<p>@(GameScore.TotalPlayerA) / @(GameScore.TotalPlayerB)</p>
+
+<div class="d-flex justify-content-around align-items-center">
+    <div style="width: 100px"></div>
+    <div style="width: 100px">A</div>
+    <div style="width: 100px">B</div>
+</div>
+
+<div class="d-flex justify-content-around align-items-center">
+    <div style="width: 100px">Primary: </div>
+    <button class="btn btn-primary" @onclick="() => ModifyScore(ScoreModifier.IncreasePrimaryA)">+</button>
+    @GameScore.PrimaryPlayerA
+    <button class="btn btn-primary" @onclick="() => ModifyScore(ScoreModifier.DecreasePrimaryA)">-</button>
+    <button class="btn btn-primary" @onclick="() => ModifyScore(ScoreModifier.IncreasePrimaryB)">+</button>
+    @GameScore.PrimaryPlayerB
+    <button class="btn btn-primary" @onclick="() => ModifyScore(ScoreModifier.DecreasePrimaryB)">-</button>
+</div>
+
+<div class="d-flex justify-content-around align-items-center" style="margin-top: 10px;">
+    <div style="width: 100px">Secondary: </div>
+    <button class="btn btn-primary" @onclick="() => ModifyScore(ScoreModifier.IncreaseSecondaryA)">+</button>
+    @GameScore.SecondaryPlayerA
+    <button class="btn btn-primary" @onclick="() => ModifyScore(ScoreModifier.DecreaseSecondaryA)">-</button>
+    
+    <button class="btn btn-primary" @onclick="() => ModifyScore(ScoreModifier.IncreaseSecondaryB)">+</button>
+    @GameScore.SecondaryPlayerB
+    <button class="btn btn-primary" @onclick="() => ModifyScore(ScoreModifier.DecreaseSecondaryB)">-</button>
+</div>
+
+@code {
+    void ModifyScore(ScoreModifier modifier)
+    {
+        ScoreService.ModifyScore(modifier);
+    }
+}

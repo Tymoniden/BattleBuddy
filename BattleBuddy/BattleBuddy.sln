@@ -1,4 +1,3 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32819.101
@@ -14,6 +13,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleBuddy.BlazorWebApp.Server", "BattleBuddy.BlazorWebApp\Server\BattleBuddy.BlazorWebApp.Server.csproj", "{CB0E6750-D7D7-419A-9797-BBF8B2CE503B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleBuddy.BlazorWebApp.Shared", "BattleBuddy.BlazorWebApp\Shared\BattleBuddy.BlazorWebApp.Shared.csproj", "{5D48ADA9-3403-4C71-9990-A5CBA1D073B3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleBuddy.WebApp", "BattleBuddy.WebApp\BattleBuddy.WebApp.csproj", "{6BB338F7-0FA9-4418-B14D-01EDED4FF55F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +46,10 @@ Global
 		{5D48ADA9-3403-4C71-9990-A5CBA1D073B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D48ADA9-3403-4C71-9990-A5CBA1D073B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D48ADA9-3403-4C71-9990-A5CBA1D073B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BB338F7-0FA9-4418-B14D-01EDED4FF55F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BB338F7-0FA9-4418-B14D-01EDED4FF55F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BB338F7-0FA9-4418-B14D-01EDED4FF55F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BB338F7-0FA9-4418-B14D-01EDED4FF55F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

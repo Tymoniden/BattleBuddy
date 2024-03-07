@@ -1,0 +1,49 @@
+﻿@using BattleBuddy.WebApp.Services
+@inherits LayoutComponentBase
+@inject NavigationManager _nav
+@inject Score GameScore
+
+<PageTitle>BattleBuddy.WebApp</PageTitle>
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main style="margin-bottom: 47px">
+        <div class="top-row px-4">
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+    
+    <div class="fixed-bottom" style="height: 42px; background-color: grey; padding-top: 2px;">
+        <button title="Navigation menu" class="btn btn-primary" @onclick="@(() => _nav.NavigateTo("/armyList"))">
+            <span class="oi oi-justify-left" aria-hidden="true"></span>
+        </button>
+        
+        <button title="Navigation menu" class="btn btn-primary" @onclick="@(() => _nav.NavigateTo("/score"))">
+            @($"{GameScore.TotalPlayerA} : {GameScore.TotalPlayerB}")
+        </button>
+        
+        <button title="Navigation menu" class="btn btn-primary" @onclick="@(() => _nav.NavigateTo("/stratagems"))">
+            <span class="oi oi-layers" aria-hidden="true"></span>
+        </button>
+    </div>
+</div>
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        GameScore.OnChange += (_, _) => InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        //GameScore.OnChange -= StateHasChanged;
+    }
+}
