@@ -6,4 +6,7 @@
     <UserSecretsId>73db9e2c-1980-4aaa-b016-b82474495b69</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.3" />
+  </ItemGroup>
 </Project>

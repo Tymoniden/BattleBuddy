@@ -1,11 +1,15 @@
 ﻿@page "/score"
 @using BattleBuddy.WebApp.Services
+@using BattleBuddy.WebApp.Services.SignalR
+@using System.Diagnostics
 @inject ScoreService ScoreService
 @inject Services.Score GameScore
+@inject SignalRMessagingService MessagingService
+
 
 <PageTitle>Score</PageTitle>
 
-<p>This is the score</p>
+<p>This is the score @id</p>
 
 <p>@(GameScore.TotalPlayerA) / @(GameScore.TotalPlayerB)</p>
 
@@ -37,8 +41,38 @@
 </div>
 
 @code {
-    void ModifyScore(ScoreModifier modifier)
+
+    Guid id = Guid.NewGuid();
+    async Task ModifyScore(ScoreModifier modifier)
     {
         ScoreService.ModifyScore(modifier);
+        await MessagingService.SendMessage();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await MessagingService.Initialize();
+
+        Debug.WriteLine($"[{id}] registering message");
+        MessagingService.RegisterToMessage("UpdateScore" , (string playerA, string playerB) =>
+        {
+            Debug.WriteLine($"[{id}] got message: {playerA}:{playerB}");
+        });
+    }
+
+    protected override void OnInitialized()
+    {
+        GameScore.OnChange += UpdateUi;
+    }
+    
+    public async ValueTask DisposeAsync()
+    {
+        GameScore.OnChange -= UpdateUi;
+        await MessagingService.Dispose();
+    }
+    
+    void UpdateUi(object? sender, EventArgs eventArgs)
+    {
+        InvokeAsync(StateHasChanged);
     }
 }

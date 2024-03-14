@@ -1,7 +1,7 @@
 using BattleBuddy.WebApp.Data;
 using BattleBuddy.WebApp.Services;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using BattleBuddy.WebApp.Services.SignalR;
+using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,10 +10,21 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
+/* Auslagern, wenn zu viel */
 builder.Services.AddSingleton<ScoreService>();
 builder.Services.AddSingleton<Score>();
+builder.Services.AddSingleton<ArmyListService>();
+builder.Services.AddScoped<SignalRClientService>();
+builder.Services.AddScoped<SignalRMessagingService>();
+/* Auslagern, wenn zu viel */
+
+builder.Services.AddResponseCompression(opts =>
+{
+    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] {"application/octet-stream"});
+});
 
 var app = builder.Build();
+app.UseResponseCompression();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -23,13 +34,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.MapBlazorHub();
+app.MapHub<BbHub>("GameHub");
+
 app.MapFallbackToPage("/_Host");
 
 app.Run();
