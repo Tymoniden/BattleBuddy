@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using BattleBuddy.BlazorWebApp.Client.Services;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Threading.Tasks;
 
@@ -6,24 +7,33 @@ namespace BattleBuddy.Services
 {
     public class SignalRService : ISignalRService
     {
-        HubConnection? _connection;
+        SignalRConfiguration? _configuration;
+        HubConnection _hubConnection;
 
-        public void Connect(int port, string hub)
+        public async Task StartUp(SignalRConfiguration configuration)
         {
-            if (IsConnected())
-            {
-                return;
-            }
-
-            _connection = new HubConnectionBuilder()
-                .WithUrl($"http://localhost:{port}/{hub}")
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl(configuration.ToUrl())
+                .WithAutomaticReconnect()
                 .Build();
 
-            _connection.Closed += async (error) =>
+            await Connect();
+        }
+
+        public async Task Connect()
+        {
+            if (_hubConnection?.State == HubConnectionState.Disconnected)
             {
-                await Task.Delay(new Random().Next(0, 5) * 1000);
-                await _connection.StartAsync();
-            };
+                await _hubConnection.StartAsync();
+            }
+
+            // TODO necessary?
+            //_hubConnection.Closed += async (error) =>
+            //{
+            //    await Task.Delay(new Random().Next(0, 5) * 1000);
+            //    await _hubConnection.StartAsync();
+            //};
         }
 
         public void RegisterCallback(string method, Func<Task> callback)
@@ -33,7 +43,7 @@ namespace BattleBuddy.Services
                 return;
             }
 
-            _connection?.On(method, callback);
+            _hubConnection?.On(method, callback);
         }
 
         public void RegisterCallback<T1>(string method, Action<T1> callback)
@@ -43,7 +53,7 @@ namespace BattleBuddy.Services
                 return;
             }
 
-            _connection?.On(method, callback);
+            _hubConnection?.On(method, callback);
         }
 
         public void RegisterCallback<T1>(string method, Func<T1, Task> callback)
@@ -53,7 +63,7 @@ namespace BattleBuddy.Services
                 return;
             }
 
-            _connection?.On(method, callback);
+            _hubConnection?.On(method, callback);
         }
 
         public void RegisterCallback<T1, T2>(string method, Func<T1, T2, Task> callback)
@@ -63,7 +73,7 @@ namespace BattleBuddy.Services
                 return;
             }
 
-            _connection?.On(method, callback);
+            _hubConnection?.On(method, callback);
         }
 
         public void RegisterCallback<T1, T2>(string method, Action<T1, T2> callback)
@@ -73,12 +83,12 @@ namespace BattleBuddy.Services
                 return;
             }
 
-            _connection?.On(method, callback);
+            _hubConnection?.On(method, callback);
         }
 
         bool IsConnected()
         {
-            if (_connection?.State == HubConnectionState.Connected || _connection?.State == HubConnectionState.Connecting)
+            if (_hubConnection?.State == HubConnectionState.Connected || _hubConnection?.State == HubConnectionState.Connecting)
             {
                 return true;
             }

@@ -1,4 +1,5 @@
-﻿using BattleBuddy.Shared;
+﻿using BattleBuddy.BlazorWebApp.Shared.Enums;
+using BattleBuddy.Shared;
 using BattleBuddy.SignalRServer.Services;
 using Microsoft.AspNetCore.SignalR;
 
@@ -13,41 +14,36 @@ namespace BattleBuddy.SignalRServer.Hubs
             _entryValueStore = entryValueStore ?? throw new ArgumentNullException(nameof(entryValueStore));
         }
 
-        public async Task SendMessage(string user, string message)
-        {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
-        }
-
-        public async Task RegisterEntries(SideIdentifier side, List<string> entries)
+        public async Task RegisterEntries(ColumnIdentifier side, List<string> entries)
         {
             _entryValueStore.AddEntries(side, entries);
-            await Clients.All.SendAsync("ReloadEntries", side, entries);
+            await Clients.All.SendAsync(nameof(SignalRMessages.ReloadEntries), side, entries);
         }
 
-        public async Task ScrollTo(SideIdentifier side, string entry)
+        public async Task ScrollTo(ColumnIdentifier side, string entry)
         {
-            await Clients.All.SendAsync("ScrollToEntry", side, entry);
+            await Clients.All.SendAsync(nameof(SignalRMessages.ScrollToEntry), side, entry);
         }
 
-        public async Task RequestScrollToIndex(SideIdentifier side, int index)
+        public async Task RequestScrollToIndex(ColumnIdentifier side, int index)
         {
-            await Clients.All.SendAsync("ScrollToIndex", side, index);
+            await Clients.All.SendAsync(nameof(SignalRMessages.ScrollToIndex), side, index);
         }
 
         public async Task RequestReload()
         {
-            await Clients.All.SendAsync("SendEntries" );
+            await Clients.All.SendAsync(nameof(SignalRMessages.SendEntries));
         }
 
         public async Task RequestEntries()
         {
-            await Clients.Caller.SendAsync("ReloadEntries", SideIdentifier.Left, _entryValueStore.GetEntries(SideIdentifier.Left));
-            await Clients.Caller.SendAsync("ReloadEntries", SideIdentifier.Right, _entryValueStore.GetEntries(SideIdentifier.Right));
+            await Clients.Caller.SendAsync(nameof(SignalRMessages.ReloadEntries), ColumnIdentifier.Left, _entryValueStore.GetEntries(ColumnIdentifier.Left));
+            await Clients.Caller.SendAsync(nameof(SignalRMessages.ReloadEntries), ColumnIdentifier.Right, _entryValueStore.GetEntries(ColumnIdentifier.Right));
         }
 
         public async Task RequestFocus(string target)
         {
-            await Clients.All.SendAsync("Focus", target);
+            await Clients.All.SendAsync(nameof(SignalRMessages.Focus), target);
         }
     }
 }

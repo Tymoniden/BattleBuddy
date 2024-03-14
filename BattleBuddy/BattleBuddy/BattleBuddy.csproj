@@ -15,4 +15,9 @@
     <PackageReference Include="SimpleInjector" Version="5.4.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BattleBuddy.BlazorWebApp\Shared\BattleBuddy.BlazorWebApp.Shared.csproj" />
+    <ProjectReference Include="..\BattleBuddy.Shared\BattleBuddy.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

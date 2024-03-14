@@ -2,11 +2,9 @@
 using SimpleInjector;
 using System.Windows;
 
+
 namespace BattleBuddy
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
         public App()
@@ -14,6 +12,7 @@ namespace BattleBuddy
             var container = new Container();
             ContainerService.SetupContainer(container);
             ServiceLocatorService.RegisterContainer(container);
+            ServiceLocatorService.GetInstance<ISignalRService>().Setup();
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)
