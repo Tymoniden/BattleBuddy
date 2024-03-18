@@ -1,27 +1,47 @@
 ﻿@page "/armyList"
 @using BattleBuddy.WebApp.Services
+@using BattleBuddy.WebApp.Services.SignalR
 @inject ArmyListService ArmyListService
-
-
+@inject SignalRMessageFactory MessageFactory
+@inject SignalRMessagingService MessagingService
 
 <div class="d-flex flex-column">
-    <div>ArmyList<div class="btn btn-secondary" style="float:right"><span>swap</span></div></div>
+    <div>ArmyList<div class="btn btn-secondary" style="float:right" @onclick="() => Initialize()"><span>swap</span></div></div>
+
+    <p>@Initialized</p>
 
     @foreach (var entry in Entries)
     {
-        <div class="btn btn-primary mt-1">
+        <div class="btn btn-primary mt-1" @onclick="() => ScrollToEntry(entry.Id)">
             <span>@entry.Name</span>
         </div>
     }
 </div>
 
 @code {
+    private string Initialized = "nope";
     private List<ArmyListEntryDto> Entries { get; set; } = new();
 
     protected override void OnInitialized()
     {
         Entries = ArmyListService.GetArmyListEntries();
+        MessagingService.Initialize();
+        MessagingService.RegisterToMessage("Initialized", () => 
+        {
+            Initialized = "yes!!!";
+            InvokeAsync(StateHasChanged);
+        });
         base.OnInitialized();
     }
 
+    async Task ScrollToEntry(Guid id)
+    {
+        var message = MessageFactory.CreateScrollToArmyListEntryMessage(id);
+        await MessagingService.SendMessage(message);
+    }
+
+    async Task Initialize()
+    {
+        await MessagingService.SendMessage(MessageFactory.CreateInitializeMessage());
+    }
 }

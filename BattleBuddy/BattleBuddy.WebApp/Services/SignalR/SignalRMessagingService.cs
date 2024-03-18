@@ -1,4 +1,6 @@
-﻿namespace BattleBuddy.WebApp.Services.SignalR
+﻿using BattleBuddy.WebApp.Services.SignalR.Messages;
+
+namespace BattleBuddy.WebApp.Services.SignalR
 {
     public class SignalRMessagingService
     {
@@ -16,6 +18,16 @@
         public Task SendMessage()
         {
             return _signalRClientService.SendMessage("SendMessage", "1", "2", CancellationToken.None);
+        }
+
+        public Task SendMessage(ISignalRMessage message)
+        {
+            return _signalRClientService.SendMessage(message.Name, CancellationToken.None);
+        }
+
+        public void RegisterToMessage(string messageName, Action callback)
+        {
+            _signalRClientService.SubscribeToMessage(messageName, callback);
         }
 
         public void RegisterToMessage<T1,T2>(string messageName, Action<T1, T2> callback)

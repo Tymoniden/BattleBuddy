@@ -12,10 +12,11 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 /* Auslagern, wenn zu viel */
 builder.Services.AddSingleton<ScoreService>();
-builder.Services.AddSingleton<Score>();
+builder.Services.AddSingleton<GameScore>();
 builder.Services.AddSingleton<ArmyListService>();
 builder.Services.AddScoped<SignalRClientService>();
 builder.Services.AddScoped<SignalRMessagingService>();
+builder.Services.AddSingleton<SignalRMessageFactory>();
 /* Auslagern, wenn zu viel */
 
 builder.Services.AddResponseCompression(opts =>
@@ -41,7 +42,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.MapBlazorHub();
-app.MapHub<BbHub>("GameHub");
+app.MapHub<GameHub>("GameHub");
 
 app.MapFallbackToPage("/_Host");
 

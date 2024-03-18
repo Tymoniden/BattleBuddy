@@ -54,6 +54,14 @@ namespace BattleBuddy.WebApp.Services.SignalR
             }
         }
 
+        public void SubscribeToMessage(string messageName, Action callback)
+        {
+            if (_hubConnection != null)
+            {
+                _hubConnection.On(messageName, callback);
+            }
+        }
+
         public void SubscribeToMessage<T1,T2>(string messageName, Action<T1, T2> callback)
         {
             if (_hubConnection != null)

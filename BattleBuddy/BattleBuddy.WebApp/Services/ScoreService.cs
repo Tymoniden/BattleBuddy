@@ -2,9 +2,9 @@
 {
     public class ScoreService
     {
-        private readonly Score _gameScore;
+        private readonly GameScore _gameScore;
 
-        public ScoreService(Score gameScore)
+        public ScoreService(GameScore gameScore)
         {
             _gameScore = gameScore ?? throw new ArgumentNullException(nameof(gameScore));
         }
@@ -14,8 +14,7 @@
             switch (modifier)
             {
                 case ScoreModifier.IncreasePrimaryA:
-                    //_gameScore.PrimaryPlayerA += amount;
-                    _gameScore.Update();
+                    _gameScore.PrimaryPlayerA += amount;
                     break;
                 case ScoreModifier.IncreasePrimaryB:
                     _gameScore.PrimaryPlayerB += amount;
@@ -56,30 +55,5 @@
         IncreaseSecondaryB,
         DecreaseSecondaryA,
         DecreaseSecondaryB
-    }
-
-    public class Score
-    {
-        public int PrimaryPlayerA { get; set; }
-        public int PrimaryPlayerB { get; set;  }
-        public int SecondaryPlayerA { get; set; }
-        public int SecondaryPlayerB { get; set; }
-
-        public int TotalPlayerA => PrimaryPlayerA + SecondaryPlayerA;
-
-        public int TotalPlayerB => PrimaryPlayerB + SecondaryPlayerB;
-
-        public event EventHandler? OnChange;
-
-        public void Update()
-        {
-            PrimaryPlayerA += 1;
-            NotifyStateChanged();
-        }
-
-        public void NotifyStateChanged()
-        {
-            OnChange?.Invoke(this, EventArgs.Empty);
-        }
     }
 }
