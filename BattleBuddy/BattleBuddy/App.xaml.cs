@@ -1,4 +1,5 @@
 ﻿using BattleBuddy.Services;
+using BattleBuddy.Services.Container;
 using SimpleInjector;
 using System.Windows;
 

@@ -1,9 +1,9 @@
-﻿namespace BattleBuddy.WebApp.Services
+﻿namespace BattleBuddy.WebApp.StateContainers
 {
     public class GameScore
     {
         public int PrimaryPlayerA { get; set; }
-        public int PrimaryPlayerB { get; set;  }
+        public int PrimaryPlayerB { get; set; }
         public int SecondaryPlayerA { get; set; }
         public int SecondaryPlayerB { get; set; }
 

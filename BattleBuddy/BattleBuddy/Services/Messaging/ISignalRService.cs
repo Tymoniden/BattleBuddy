@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace BattleBuddy.Services
+namespace BattleBuddy.Services.SignalR
 {
     public interface ISignalRService
     {
@@ -11,5 +11,6 @@ namespace BattleBuddy.Services
         void RegisterCallback<T1, T2>(string method, Func<T1, T2, Task> callback);
         void RegisterCallback<T1>(string method, Action<T1> callback);
         void RegisterCallback<T1>(string method, Func<T1, Task> callback);
+        void RegisterCallback(string method, Action callback);
     }
 }

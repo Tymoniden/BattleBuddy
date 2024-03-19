@@ -1,4 +1,6 @@
-﻿namespace BattleBuddy.WebApp.Services
+﻿using BattleBuddy.WebApp.StateContainers;
+
+namespace BattleBuddy.WebApp.Services
 {
     public class GameDto
     {

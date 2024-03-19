@@ -1,15 +1,18 @@
 ﻿@page "/armyList"
 @using BattleBuddy.WebApp.Services
 @using BattleBuddy.WebApp.Services.SignalR
+@using BattleBuddy.WebApp.StateContainers
 @inject ArmyListService ArmyListService
 @inject SignalRMessageFactory MessageFactory
 @inject SignalRMessagingService MessagingService
+@inject Game Game
 
 <div class="d-flex flex-column">
-    <div>ArmyList<div class="btn btn-secondary" style="float:right" @onclick="() => Initialize()"><span>swap</span></div></div>
-
-    <p>@Initialized</p>
-
+    <div>ArmyList
+        <div class="btn btn-secondary" style="float:right" @onclick="Initialize"><span>swap</span></div>
+        <div class="btn btn-secondary" style="float:right" @onclick="UpdateLists"><span>Reload</span></div>
+    </div>
+    
     @foreach (var entry in Entries)
     {
         <div class="btn btn-primary mt-1" @onclick="() => ScrollToEntry(entry.Id)">
@@ -19,16 +22,14 @@
 </div>
 
 @code {
-    private string Initialized = "nope";
     private List<ArmyListEntryDto> Entries { get; set; } = new();
 
     protected override void OnInitialized()
     {
         Entries = ArmyListService.GetArmyListEntries();
         MessagingService.Initialize();
-        MessagingService.RegisterToMessage("Initialized", () => 
+        MessagingService.SubscribeToMessage("ReloadArmyLists", () =>
         {
-            Initialized = "yes!!!";
             InvokeAsync(StateHasChanged);
         });
         base.OnInitialized();
@@ -43,5 +44,10 @@
     async Task Initialize()
     {
         await MessagingService.SendMessage(MessageFactory.CreateInitializeMessage());
+    }
+
+    async Task UpdateLists()
+    {
+        await MessagingService.SendMessage(MessageFactory.CreateRequestListUpdateMessage());
     }
 }

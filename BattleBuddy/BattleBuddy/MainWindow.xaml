@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BattleBuddy" 
         xmlns:ui="clr-namespace:BattleBuddy.Ui" 
         xmlns:viewmodel="clr-namespace:BattleBuddy.ViewModel" 
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
@@ -24,8 +23,8 @@
             <ColumnDefinition Name="RightColumn"/>
         </Grid.ColumnDefinitions>
 
-        <wv2:WebView2 Grid.Row="1" Grid.Column="0" Name="leftWebView" Source="https://rweyrauch.github.io/PrettyScribe/"/>
-        <wv2:WebView2 Grid.Row="1" Grid.Column="1" Name="rightWebView" Source="https://rweyrauch.github.io/PrettyScribe/"/>
+        <wv2:WebView2 Grid.Row="1" Grid.Column="0" x:Name="LftWebView" Source="https://rweyrauch.github.io/PrettyScribe/"/>
+        <wv2:WebView2 Grid.Row="1" Grid.Column="1" x:Name="RightWebView" Source="https://rweyrauch.github.io/PrettyScribe/"/>
 
         <ui:HotKeyControl Grid.Column="0" Grid.Row="0" x:Name="HotKeyControl" >
             <ui:HotKeyControl.Style>

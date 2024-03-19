@@ -25,12 +25,12 @@ namespace BattleBuddy.WebApp.Services.SignalR
             return _signalRClientService.SendMessage(message.Name, CancellationToken.None);
         }
 
-        public void RegisterToMessage(string messageName, Action callback)
+        public void SubscribeToMessage(string messageName, Action callback)
         {
             _signalRClientService.SubscribeToMessage(messageName, callback);
         }
 
-        public void RegisterToMessage<T1,T2>(string messageName, Action<T1, T2> callback)
+        public void SubscribeToMessage<T1,T2>(string messageName, Action<T1, T2> callback)
         {
             _signalRClientService.SubscribeToMessage(messageName, callback);
         }

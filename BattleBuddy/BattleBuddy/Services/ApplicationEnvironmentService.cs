@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using BattleBuddy.Services.SignalR;
 
 namespace BattleBuddy.Services
 {
@@ -18,8 +20,6 @@ namespace BattleBuddy.Services
         public void SetupEnvironment()
         {
             _signalRService.Connect(5432, "GameHub");
-            
-
 
             if(Debugger.IsAttached)
             {

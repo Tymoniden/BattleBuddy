@@ -4,6 +4,6 @@ namespace BattleBuddy.WebApp.Services.SignalR
 {
     public class InitializeMessage : ISignalRMessage
     {
-        public string Name => "Initialize";
+        public string Name => nameof(GameHub.InitializeMessage);
     }
 }

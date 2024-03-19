@@ -1,12 +1,12 @@
-﻿using BattleBuddy.ViewModel;
+﻿using BattleBuddy.Services.SignalR;
+using BattleBuddy.ViewModel;
 using BattleBuddy.ViewModels;
-using SimpleInjector;
 
-namespace BattleBuddy.Services
+namespace BattleBuddy.Services.Container
 {
     public static class ContainerService
     {
-        public static void SetupContainer(Container container)
+        public static void SetupContainer(SimpleInjector.Container container)
         {
             container.RegisterSingleton<ViewModelFactory>();
             container.RegisterSingleton<MainViewModel>();
@@ -26,6 +26,8 @@ namespace BattleBuddy.Services
             container.RegisterSingleton<IWindowModeService, WindowModeService>();
             container.RegisterSingleton<IOverlayManager, OverlayManager>();
             container.RegisterSingleton<IWindowLayoutService, WindowLayoutService>();
+            container.RegisterSingleton<ResourceProvider>();
+            container.RegisterSingleton<JsInteractionService>();
         }
     }
 }

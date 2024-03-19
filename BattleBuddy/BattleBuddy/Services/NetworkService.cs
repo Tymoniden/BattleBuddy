@@ -7,19 +7,19 @@ namespace BattleBuddy.Services
 {
     public class NetworkService : INetworkService
     {
-        public async Task<List<string>> GetIpAdresses()
+        public async Task<List<string>> GetIpAddresses()
         {
             var hostName = Dns.GetHostName();
             var entry = await Dns.GetHostEntryAsync(hostName);
 
-            var ipAdresses = new List<string>();
+            var ipAddresses = new List<string>();
 
             foreach (var address in entry.AddressList.Where(a => a.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork))
             {
-                ipAdresses.Add(address.ToString());
+                ipAddresses.Add(address.ToString());
             }
 
-            return ipAdresses;
+            return ipAddresses;
         }
     }
 }

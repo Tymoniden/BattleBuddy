@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BattleBuddy.Services
+namespace BattleBuddy.Services.SignalR
 {
     public class SignalRService : ISignalRService
     {
@@ -29,8 +29,6 @@ namespace BattleBuddy.Services
             };
 
             await _connection.StartAsync();
-            
-            RegisterCallback("Initialized", () => Debug.WriteLine("Connected to SignalR Hub"));
         }
 
         public void RegisterCallback(string method, Action callback)

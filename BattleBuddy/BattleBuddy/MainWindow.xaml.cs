@@ -1,8 +1,11 @@
 ﻿using BattleBuddy.Services;
 using BattleBuddy.ViewModel;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using BattleBuddy.Services.SignalR;
+using BattleBuddy.Services.Container;
 
 namespace BattleBuddy
 {
@@ -24,6 +27,22 @@ namespace BattleBuddy
             ServiceLocatorService.GetInstance<IWindowModeService>().StateChangeEvent += StateChangeEvent;
             ServiceLocatorService.GetInstance<IWindowLayoutService>().WindowLayoutChanged += WindowLayoutChanged;
             
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("Initialized" , () =>
+            {
+                Dispatcher.InvokeAsync(async () =>
+                {
+                    await LftWebView.ExecuteScriptAsync(ServiceLocatorService.GetInstance<JsInteractionService>().GetSetupScript());
+                });
+            });
+
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("RequestListUpdateMessage" , () =>
+            {
+                Dispatcher.InvokeAsync(async () =>
+                {
+                    var entries = await LftWebView.ExecuteScriptAsync("getEntries();");
+                });
+            });
+
             DataContext = mainViewModel;
         }
 
@@ -54,7 +73,7 @@ namespace BattleBuddy
             }
         }
 
-        private void StateChangeEvent(object? sender, System.EventArgs e)
+        private void StateChangeEvent(object? sender, EventArgs e)
         {
             if (e is StateChangedEventArgs stateChangedEventArgs)
             {

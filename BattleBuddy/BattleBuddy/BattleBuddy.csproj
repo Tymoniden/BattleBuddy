@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\SetupJsFunctions.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SetupJsFunctions.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="7.0.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1418.22" />

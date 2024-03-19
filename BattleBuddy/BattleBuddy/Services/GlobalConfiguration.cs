@@ -2,7 +2,7 @@
 {
     public sealed class GlobalConfiguration
     {
-        public int WebAppPort { get; } = 5010;
+        public int WebAppPort { get; } = 5432;
 
         public string WebAppPath { get; } = "BattleBuddy.BlazorWebApp\\Server\\bin\\Release\\net6.0\\publish\\BattleBuddy.BlazorWebApp.Server.exe";
 

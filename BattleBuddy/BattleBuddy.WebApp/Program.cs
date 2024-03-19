@@ -1,6 +1,8 @@
+using BattleBuddy.WebApp;
 using BattleBuddy.WebApp.Data;
 using BattleBuddy.WebApp.Services;
 using BattleBuddy.WebApp.Services.SignalR;
+using BattleBuddy.WebApp.StateContainers;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 /* Auslagern, wenn zu viel */
 builder.Services.AddSingleton<ScoreService>();
+builder.Services.AddSingleton<Game>();
 builder.Services.AddSingleton<GameScore>();
 builder.Services.AddSingleton<ArmyListService>();
 builder.Services.AddScoped<SignalRClientService>();
@@ -26,6 +29,7 @@ builder.Services.AddResponseCompression(opts =>
 
 var app = builder.Build();
 app.UseResponseCompression();
+app.InitializeApplication();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -20,7 +20,7 @@ namespace BattleBuddy.Services
             var endpoints = new List<string>();
             var port = _configurationService.GetGlobalConfiguration().WebAppPort;
 
-            foreach (var endpoint in await _networkService.GetIpAdresses())
+            foreach (var endpoint in await _networkService.GetIpAddresses())
             {
                 endpoints.Add($"http://{endpoint}:{port}");
             }

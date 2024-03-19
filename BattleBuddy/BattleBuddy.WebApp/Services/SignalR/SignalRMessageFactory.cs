@@ -13,5 +13,10 @@ namespace BattleBuddy.WebApp.Services.SignalR
         {
             return new InitializeMessage();
         }
+
+        public ISignalRMessage CreateRequestListUpdateMessage()
+        {
+            return new RequestListUpdateMessage();
+        }
     }
 }

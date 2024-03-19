@@ -5,6 +5,6 @@ namespace BattleBuddy.Services
 {
     public interface INetworkService
     {
-        Task<List<string>> GetIpAdresses();
+        Task<List<string>> GetIpAddresses();
     }
 }
