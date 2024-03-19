@@ -3,7 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BattleBuddy" xmlns:ui="clr-namespace:BattleBuddy.Ui" xmlns:viewmodel="clr-namespace:BattleBuddy.ViewModel" xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:local="clr-namespace:BattleBuddy" 
+        xmlns:ui="clr-namespace:BattleBuddy.Ui" 
+        xmlns:viewmodel="clr-namespace:BattleBuddy.ViewModel" 
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
         Loaded="OnWindowLoaded"
         WindowState="Maximized"
@@ -32,12 +35,15 @@
                         <DataTrigger Binding="{Binding HotKeysPanelViewModel.IsHotKeyPanelVisible}" Value="True">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.ClientEndpointOverlayViewModel.IsVisible}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </ui:HotKeyControl.Style>
         </ui:HotKeyControl>
 
-        <ui:ClientEndpointOverlay Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="3" DataContext="{Binding ClientEndpointOverlayViewModel}">
+        <ui:ClientEndpointOverlay x:Name="ClientEndpointOverlay"  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" DataContext="{Binding ClientEndpointOverlayViewModel}">
             <ui:ClientEndpointOverlay.Style>
                 <Style TargetType="ui:ClientEndpointOverlay">
                     <Setter Property="Visibility" Value="Collapsed" />

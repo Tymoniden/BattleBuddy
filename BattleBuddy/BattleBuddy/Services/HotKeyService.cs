@@ -20,7 +20,7 @@ namespace BattleBuddy.Services
 
         public List<HotKeyViewModel> GetHotKeys()
         {
-            return _hotKeys.Keys.ToList();
+            return _hotKeys.Keys.OrderBy(k => k.Key).ToList();
         }
 
         public async Task ExecuteHotkey(Key key, ModifierKeys modifier)
