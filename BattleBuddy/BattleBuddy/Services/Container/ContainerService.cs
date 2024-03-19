@@ -1,4 +1,5 @@
-﻿using BattleBuddy.Services.SignalR;
+﻿using BattleBuddy.Services.Messaging;
+using BattleBuddy.Services.SignalR;
 using BattleBuddy.ViewModel;
 using BattleBuddy.ViewModels;
 
@@ -28,6 +29,7 @@ namespace BattleBuddy.Services.Container
             container.RegisterSingleton<IWindowLayoutService, WindowLayoutService>();
             container.RegisterSingleton<ResourceProvider>();
             container.RegisterSingleton<JsInteractionService>();
+            container.RegisterSingleton<DtoFactory>();
         }
     }
 }

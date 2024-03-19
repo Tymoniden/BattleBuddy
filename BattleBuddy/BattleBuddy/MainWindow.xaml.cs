@@ -1,11 +1,12 @@
 ﻿using BattleBuddy.Services;
 using BattleBuddy.ViewModel;
 using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using BattleBuddy.Services.SignalR;
 using BattleBuddy.Services.Container;
+using BattleBuddy.Services.Messaging;
+using System.Linq;
 
 namespace BattleBuddy
 {
@@ -31,7 +32,8 @@ namespace BattleBuddy
             {
                 Dispatcher.InvokeAsync(async () =>
                 {
-                    await LftWebView.ExecuteScriptAsync(ServiceLocatorService.GetInstance<JsInteractionService>().GetSetupScript());
+                    await LeftWebView.ExecuteScriptAsync(ServiceLocatorService.GetInstance<JsInteractionService>().GetSetupScript());
+                    await RightWebView.ExecuteScriptAsync(ServiceLocatorService.GetInstance<JsInteractionService>().GetSetupScript());
                 });
             });
 
@@ -39,7 +41,13 @@ namespace BattleBuddy
             {
                 Dispatcher.InvokeAsync(async () =>
                 {
-                    var entries = await LftWebView.ExecuteScriptAsync("getEntries();");
+                    var leftRawEntries = await LeftWebView.ExecuteScriptAsync("getEntries();");
+                    var leftEntries = ServiceLocatorService.GetInstance<DtoFactory>().CreateArmyListEntry(leftRawEntries, "left");
+
+                    var rightRawEntries = await RightWebView.ExecuteScriptAsync("getEntries();");
+                    var rightEntries = ServiceLocatorService.GetInstance<DtoFactory>().CreateArmyListEntry(rightRawEntries, "right");
+
+                    ServiceLocatorService.GetInstance<ISignalRService>()?.SendMessage("UpdateArmyListEntries", Enumerable.Concat(leftEntries, rightEntries));
                 });
             });
 

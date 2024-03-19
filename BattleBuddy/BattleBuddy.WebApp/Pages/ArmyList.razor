@@ -9,13 +9,14 @@
 
 <div class="d-flex flex-column">
     <div>ArmyList
-        <div class="btn btn-secondary" style="float:right" @onclick="Initialize"><span>swap</span></div>
+        <div class="btn btn-secondary" style="float:right" @onclick="Initialize"><span>Initialize</span></div>
+        <div class="btn btn-secondary" style="float:right" @onclick="Swap"><span>Swap</span></div>
         <div class="btn btn-secondary" style="float:right" @onclick="UpdateLists"><span>Reload</span></div>
     </div>
     
-    @foreach (var entry in Entries)
+    @foreach (var entry in Game.ArmyListEntries.Where(e => e.Origin.Equals(Origin, StringComparison.OrdinalIgnoreCase)))
     {
-        <div class="btn btn-primary mt-1" @onclick="() => ScrollToEntry(entry.Id)">
+        <div class="btn btn-primary mt-1" @onclick="() => ScrollToEntry(entry.Uid)">
             <span>@entry.Name</span>
         </div>
     }
@@ -23,10 +24,10 @@
 
 @code {
     private List<ArmyListEntryDto> Entries { get; set; } = new();
+    private string Origin = "left";
 
     protected override void OnInitialized()
     {
-        Entries = ArmyListService.GetArmyListEntries();
         MessagingService.Initialize();
         MessagingService.SubscribeToMessage("ReloadArmyLists", () =>
         {
@@ -39,6 +40,11 @@
     {
         var message = MessageFactory.CreateScrollToArmyListEntryMessage(id);
         await MessagingService.SendMessage(message);
+    }
+
+    void Swap()
+    {
+        Origin = Origin.Equals("left", StringComparison.OrdinalIgnoreCase) ? "right" : "left";
     }
 
     async Task Initialize()

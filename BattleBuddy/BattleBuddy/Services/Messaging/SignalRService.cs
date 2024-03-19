@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using System;
-using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace BattleBuddy.Services.SignalR
@@ -29,6 +27,21 @@ namespace BattleBuddy.Services.SignalR
             };
 
             await _connection.StartAsync();
+        }
+
+        public async Task SendMessage(string message)
+        {
+            await _connection.SendAsync(message);
+        }
+
+        public async Task SendMessage<T>(string message, T param)
+        {
+            await _connection.SendAsync(message, param);
+        }
+
+        public async Task SendMessage<T1,T2>(string message, T1 param1, T2 param2)
+        {
+            await _connection.SendAsync(message, param1, param2);
         }
 
         public void RegisterCallback(string method, Action callback)

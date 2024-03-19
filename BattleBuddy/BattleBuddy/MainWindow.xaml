@@ -23,7 +23,7 @@
             <ColumnDefinition Name="RightColumn"/>
         </Grid.ColumnDefinitions>
 
-        <wv2:WebView2 Grid.Row="1" Grid.Column="0" x:Name="LftWebView" Source="https://rweyrauch.github.io/PrettyScribe/"/>
+        <wv2:WebView2 Grid.Row="1" Grid.Column="0" x:Name="LeftWebView" Source="https://rweyrauch.github.io/PrettyScribe/"/>
         <wv2:WebView2 Grid.Row="1" Grid.Column="1" x:Name="RightWebView" Source="https://rweyrauch.github.io/PrettyScribe/"/>
 
         <ui:HotKeyControl Grid.Column="0" Grid.Row="0" x:Name="HotKeyControl" >
