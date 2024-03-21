@@ -2,9 +2,8 @@
 
 namespace BattleBuddy.WebApp.Services.SignalR;
 
-public class RequestListUpdateMessage : ISignalRMessage
+public class RequestJustifyColumnsMessage : ISignalRMessage
 {
-    public string Name => nameof(GameHub.RequestListUpdateMessage);
-
+    public string Name => nameof(RequestJustifyColumnsMessage);
     public object[] Params => Array.Empty<object>();
 }

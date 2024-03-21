@@ -3,5 +3,7 @@
     public interface ISignalRMessage
     {
         public string Name { get; }
+
+        public object[] Params { get; }
     }
 }

@@ -1,5 +1,4 @@
-﻿@using BattleBuddy.WebApp.Services
-@using BattleBuddy.WebApp.StateContainers
+﻿@using BattleBuddy.WebApp.StateContainers
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 @inject GameScore GameScore
@@ -12,25 +11,21 @@
     </div>
 
     <main style="margin-bottom: 47px">
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
         <article class="content px-4">
             @Body
         </article>
     </main>
     
     <div class="fixed-bottom d-flex justify-content-around align-items-center" style="height: 42px; background-color: white; padding-top: 2px;">
-        <button title="Navigation menu" class="btn btn-primary" @onclick="@(() => NavigationManager.NavigateTo("/armyList"))">
+        <button title="armyList" class="btn btn-primary" @onclick="@(() => NavigationManager.NavigateTo("/armyList"))">
             <span class="oi oi-justify-left" aria-hidden="true"></span>
         </button>
         
-        <button title="Navigation menu" class="btn btn-primary" @onclick="@(() => NavigationManager.NavigateTo("/score"))">
+        <button title="score" class="btn btn-primary" @onclick="@(() => NavigationManager.NavigateTo("/score"))">
             @($"{GameScore.TotalPlayerA} : {GameScore.TotalPlayerB}")
         </button>
         
-        <button title="Navigation menu" class="btn btn-primary" @onclick="@(() => NavigationManager.NavigateTo("/stratagems"))">
+        <button title="stratagems" class="btn btn-primary" @onclick="@(() => NavigationManager.NavigateTo("/stratagems"))">
             <span class="oi oi-layers" aria-hidden="true"></span>
         </button>
     </div>

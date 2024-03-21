@@ -16,5 +16,15 @@ namespace BattleBuddy.Services
             var script = _resourceProvider.GetResourceContentAsString(@"BattleBuddy.Resources.SetupJsFunctions.js");
             return script;
         }
+
+        public string ExecuteScrollToEntry(Guid uid)
+        {
+            return $"scrollToEntry(\"{uid}\");";
+        }
+
+        public string ExecuteScrollToEntry(int percentage)
+        {
+            return $"scrollToPercent({percentage});";
+        }
     }
 }

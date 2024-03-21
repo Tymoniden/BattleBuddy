@@ -2,9 +2,8 @@
 
 namespace BattleBuddy.WebApp.Services.SignalR;
 
-public class RequestListUpdateMessage : ISignalRMessage
+public class RequestExtendRightColumnMessage: ISignalRMessage
 {
-    public string Name => nameof(GameHub.RequestListUpdateMessage);
-
+    public string Name => nameof(RequestExtendRightColumnMessage);
     public object[] Params => Array.Empty<object>();
 }

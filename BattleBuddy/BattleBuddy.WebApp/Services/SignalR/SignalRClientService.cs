@@ -29,31 +29,34 @@ namespace BattleBuddy.WebApp.Services.SignalR
                 await _hubConnection.DisposeAsync();
             }
         }
-
-        public async Task SendMessage(string methodName, CancellationToken cancellationToken)
+        
+        public async Task SendMessage(string methodName, CancellationToken cancellationToken, params object[] parameters)
         {
-            if (_hubConnection != null)
+            if (_hubConnection == null)
             {
-                await _hubConnection.SendAsync(methodName, cancellationToken);
+                return;
             }
-        }
 
-        public async Task SendMessage(string methodName, object argument, CancellationToken cancellationToken)
-        {
-            if (_hubConnection != null)
+            switch (parameters.Length)
             {
-                await _hubConnection.SendAsync(methodName, argument, cancellationToken);
+                case 0:
+                    await _hubConnection.SendAsync(methodName, cancellationToken);
+                    break;
+                case 1:
+                    await _hubConnection.SendAsync(methodName, parameters[0], cancellationToken);
+                    break;
+                case 2:
+                    await _hubConnection.SendAsync(methodName, parameters[0], parameters[1], cancellationToken);
+                    break;
+                case 3:
+                    await _hubConnection.SendAsync(methodName, parameters[0], parameters[1], parameters[2], cancellationToken);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(parameters));
             }
-        }
 
-        public async Task SendMessage(string methodName, object argument1, object argument2, CancellationToken cancellationToken)
-        {
-            if (_hubConnection != null)
-            {
-                await _hubConnection.SendAsync(methodName, argument1, argument2, cancellationToken);
-            }
         }
-
+        
         public void SubscribeToMessage(string messageName, Action callback)
         {
             if (_hubConnection != null)

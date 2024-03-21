@@ -1,12 +1,14 @@
 ﻿using BattleBuddy.Services;
 using BattleBuddy.ViewModel;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using BattleBuddy.Services.SignalR;
 using BattleBuddy.Services.Container;
 using BattleBuddy.Services.Messaging;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BattleBuddy
 {
@@ -15,6 +17,8 @@ namespace BattleBuddy
     /// </summary>
     public partial class MainWindow : Window
     {
+        private List<ArmyListEntryDto> _entries = new();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -27,31 +31,96 @@ namespace BattleBuddy
             ServiceLocatorService.GetInstance<IApplicationEnvironmentService>().SetupEnvironment();
             ServiceLocatorService.GetInstance<IWindowModeService>().StateChangeEvent += StateChangeEvent;
             ServiceLocatorService.GetInstance<IWindowLayoutService>().WindowLayoutChanged += WindowLayoutChanged;
-            
-            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("Initialized" , () =>
-            {
-                Dispatcher.InvokeAsync(async () =>
-                {
-                    await LeftWebView.ExecuteScriptAsync(ServiceLocatorService.GetInstance<JsInteractionService>().GetSetupScript());
-                    await RightWebView.ExecuteScriptAsync(ServiceLocatorService.GetInstance<JsInteractionService>().GetSetupScript());
-                });
-            });
 
+
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("ExtendLeftColumn" , () => ServiceLocatorService.GetInstance<IWindowLayoutService>().ExtendLeftColumn());
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("ExtendRightColumn" , () => ServiceLocatorService.GetInstance<IWindowLayoutService>().ExtendRightColumn());
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("JustifyColumns" , () => ServiceLocatorService.GetInstance<IWindowLayoutService>().JustifyColumns());
+
+            Dispatcher.InvokeAsync(async () =>
+            {
+                await LeftWebView.EnsureCoreWebView2Async();
+                await RightWebView.EnsureCoreWebView2Async();
+
+                LeftWebView.CoreWebView2.DOMContentLoaded += (o, args) =>
+                {
+                    Dispatcher.InvokeAsync(async () =>
+                    {
+                        await LeftWebView.ExecuteScriptAsync(ServiceLocatorService.GetInstance<JsInteractionService>().GetSetupScript());
+                    });
+                };
+                
+                RightWebView.CoreWebView2.DOMContentLoaded += (o, args) =>
+                {
+                    Dispatcher.InvokeAsync(async () =>
+                    {
+                        await RightWebView.ExecuteScriptAsync(ServiceLocatorService.GetInstance<JsInteractionService>().GetSetupScript());
+                    });
+                };
+            });
+            
             ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("RequestListUpdateMessage" , () =>
             {
+                Dispatcher.InvokeAsync(async () => await UpdateEntries());
+            });
+
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("ScrollDisplayToArmyList",
+            (Guid uid) =>
+            {
                 Dispatcher.InvokeAsync(async () =>
                 {
-                    var leftRawEntries = await LeftWebView.ExecuteScriptAsync("getEntries();");
-                    var leftEntries = ServiceLocatorService.GetInstance<DtoFactory>().CreateArmyListEntry(leftRawEntries, "left");
-
-                    var rightRawEntries = await RightWebView.ExecuteScriptAsync("getEntries();");
-                    var rightEntries = ServiceLocatorService.GetInstance<DtoFactory>().CreateArmyListEntry(rightRawEntries, "right");
-
-                    ServiceLocatorService.GetInstance<ISignalRService>()?.SendMessage("UpdateArmyListEntries", Enumerable.Concat(leftEntries, rightEntries));
+                    var entry = _entries.FirstOrDefault(entry => entry.Uid == uid);
+                    if (entry != null)
+                    {
+                        var methodCall = ServiceLocatorService.GetInstance<JsInteractionService>()
+                            .ExecuteScrollToEntry(uid);
+                        if (entry.Origin.ToLower().Equals("left"))
+                        {
+                            await LeftWebView.ExecuteScriptAsync(methodCall);
+                        }
+                        else
+                        {
+                            await RightWebView.ExecuteScriptAsync(methodCall);
+                        }
+                    }
                 });
             });
 
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("ScrollToPercent",
+            (string origin, int percentage) =>
+            {
+                Dispatcher.InvokeAsync(async () =>
+                {
+                    var method = ServiceLocatorService.GetInstance<JsInteractionService>().ExecuteScrollToEntry(percentage);
+                    var control = origin.ToLower().Equals("left") ? LeftWebView : RightWebView;
+
+                    await control.ExecuteScriptAsync(method);
+                });
+            });
+
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("ToggleQrCode", () =>
+            {
+                Dispatcher.Invoke(() =>
+                    mainViewModel.ClientEndpointOverlayViewModel.IsVisible =
+                    !mainViewModel.ClientEndpointOverlayViewModel.IsVisible);
+            });
+
+            ServiceLocatorService.GetInstance<IHotKeyRegistrationService>().RegisterHotKey(Key.F3, ModifierKeys.None, "Update entries" , UpdateEntries);
+
             DataContext = mainViewModel;
+        }
+
+        private async Task UpdateEntries()
+        {
+            _entries.Clear();
+
+            var leftRawEntries = await LeftWebView.ExecuteScriptAsync("getEntries();");
+            _entries.AddRange(ServiceLocatorService.GetInstance<DtoFactory>().CreateArmyListEntry(leftRawEntries, "left"));
+
+            var rightRawEntries = await RightWebView.ExecuteScriptAsync("getEntries();");
+            _entries.AddRange(ServiceLocatorService.GetInstance<DtoFactory>().CreateArmyListEntry(rightRawEntries, "right"));
+
+            await ServiceLocatorService.GetInstance<ISignalRService>().SendMessage("UpdateArmyListEntries", _entries);
         }
 
         private void WindowLayoutChanged(object? sender, EventArgs e)
@@ -118,7 +187,7 @@ namespace BattleBuddy
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            ServiceLocatorService.GetInstance<IHotKeyService>().ExecuteHotkey(e.Key, Keyboard.Modifiers);
+            ServiceLocatorService.GetInstance<IHotKeyService>().ExecuteHotkey(e.Key, Keyboard.Modifiers, e);
         }
     }
 }

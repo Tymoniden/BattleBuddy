@@ -8,10 +8,12 @@
         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
         Loaded="OnWindowLoaded"
-        WindowState="Maximized"
+        WindowState="Normal"
         d:DataContext="{d:DesignInstance viewmodel:MainViewModel}"
         PreviewKeyDown="Window_PreviewKeyDown"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Battle Buddy" 
+        Height="1080" 
+        Width="1920">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

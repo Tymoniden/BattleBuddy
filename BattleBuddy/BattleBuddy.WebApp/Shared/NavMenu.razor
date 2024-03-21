@@ -1,13 +1,16 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using BattleBuddy.WebApp.StateContainers
+@inject SessionConfiguration SessionConfiguration
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <a class="navbar-brand" href="">Battle Buddy</a>
-
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
+        
+        <button title="stratagems" class="btn btn-primary" @onclick="Swap">
+            <span class="oi oi-transfer" aria-hidden="true"></span>
         </button>
     </div>
 </div>
@@ -17,11 +20,6 @@
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
             </NavLink>
         </div>
         <div class="nav-item px-3">
@@ -46,6 +44,23 @@
     private bool _collapseNavMenu = true;
 
     private string? NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
+
+    private void Swap()
+    {
+        if (SessionConfiguration.ParticipantRole == Participants.PlayerA)
+        {
+            SessionConfiguration.ParticipantRole = Participants.PlayerB;
+            return;
+        }
+
+        if (SessionConfiguration.ParticipantRole == Participants.PlayerB)
+        {
+            SessionConfiguration.ParticipantRole = Participants.PlayerA;
+            return;
+        }
+
+        SessionConfiguration.ParticipantRole = Participants.PlayerA;
+    }
 
     private void ToggleNavMenu()
     {

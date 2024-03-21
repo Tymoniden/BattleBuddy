@@ -6,7 +6,12 @@ namespace BattleBuddy.WebApp.Services.SignalR
     {
         public ScrollToArmyListEntryMessage CreateScrollToArmyListEntryMessage(Guid id)
         {
-            return new ScrollToArmyListEntryMessage();
+            return new ScrollToArmyListEntryMessage { Uid = id };
+        }
+
+        public ScrollToPercentMessage CreateScrollToPercent(string origin, int percent)
+        {
+            return new ScrollToPercentMessage { Origin = origin, Percent = percent };
         }
 
         public InitializeMessage CreateInitializeMessage()
@@ -14,9 +19,29 @@ namespace BattleBuddy.WebApp.Services.SignalR
             return new InitializeMessage();
         }
 
-        public ISignalRMessage CreateRequestListUpdateMessage()
+        public RequestListUpdateMessage CreateRequestListUpdateMessage()
         {
             return new RequestListUpdateMessage();
+        }
+
+        public RequestToggleQrCodeMessage CreateRequestToggleQrCodeMessage()
+        {
+            return new RequestToggleQrCodeMessage();
+        }
+
+        public RequestExtendLeftColumnMessage CreateRequestExtendLeftColumnMessage()
+        {
+            return new RequestExtendLeftColumnMessage();
+        }
+
+        public RequestExtendRightColumnMessage CreateRequestExtendRightColumnMessage()
+        {
+            return new RequestExtendRightColumnMessage();
+        }
+
+        public RequestJustifyColumnsMessage CreateRequestJustifyColumnsMessage()
+        {
+            return new RequestJustifyColumnsMessage();
         }
     }
 }

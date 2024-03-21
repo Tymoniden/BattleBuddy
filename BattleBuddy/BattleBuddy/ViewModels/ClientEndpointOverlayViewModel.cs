@@ -25,7 +25,7 @@ namespace BattleBuddy.ViewModels
 
             _clientEndpointService = clientEndpointService ?? throw new ArgumentNullException(nameof(clientEndpointService));
             _qRCodeService = qRCodeService ?? throw new ArgumentNullException(nameof(qRCodeService));
-            hotKeyRegistrationService.RegisterHotKey(Key.F5, ModifierKeys.None, "Display connection options", () => IsVisible = !IsVisible);
+            hotKeyRegistrationService.RegisterHotKey(Key.F2, ModifierKeys.None, "Display connection options", () => IsVisible = !IsVisible);
         }
 
         public ObservableCollection<string> Endpoints { get; } = new();

@@ -14,15 +14,10 @@ namespace BattleBuddy.WebApp.Services.SignalR
         public Task Initialize() => _signalRClientService.Initialize();
 
         public Task Dispose() => _signalRClientService.Dispose();
-
-        public Task SendMessage()
-        {
-            return _signalRClientService.SendMessage("SendMessage", "1", "2", CancellationToken.None);
-        }
-
+        
         public Task SendMessage(ISignalRMessage message)
         {
-            return _signalRClientService.SendMessage(message.Name, CancellationToken.None);
+            return _signalRClientService.SendMessage(message.Name, CancellationToken.None, message.Params);
         }
 
         public void SubscribeToMessage(string messageName, Action callback)

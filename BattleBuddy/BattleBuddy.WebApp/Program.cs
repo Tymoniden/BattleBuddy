@@ -1,5 +1,4 @@
 using BattleBuddy.WebApp;
-using BattleBuddy.WebApp.Data;
 using BattleBuddy.WebApp.Services;
 using BattleBuddy.WebApp.Services.SignalR;
 using BattleBuddy.WebApp.StateContainers;
@@ -10,7 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 
 /* Auslagern, wenn zu viel */
 builder.Services.AddSingleton<ScoreService>();
@@ -19,6 +17,7 @@ builder.Services.AddSingleton<GameScore>();
 builder.Services.AddSingleton<ArmyListService>();
 builder.Services.AddScoped<SignalRClientService>();
 builder.Services.AddScoped<SignalRMessagingService>();
+builder.Services.AddScoped<SessionConfiguration>();
 builder.Services.AddSingleton<SignalRMessageFactory>();
 /* Auslagern, wenn zu viel */
 

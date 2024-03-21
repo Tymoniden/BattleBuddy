@@ -23,7 +23,7 @@ namespace BattleBuddy.Services
             return _hotKeys.Keys.OrderBy(k => k.Key).ToList();
         }
 
-        public async Task ExecuteHotkey(Key key, ModifierKeys modifier)
+        public async Task ExecuteHotkey(Key key, ModifierKeys modifier, KeyboardEventArgs e)
         {
             var keyViewModel = _hotKeys.FirstOrDefault(entry =>
                 entry.Key.Key == key &&
@@ -35,6 +35,7 @@ namespace BattleBuddy.Services
             if (keyViewModel.Value != null)
             {
                 await keyViewModel.Value.Invoke();
+                e.Handled = true;
             }
         }
     }

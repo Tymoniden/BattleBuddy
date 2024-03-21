@@ -39,10 +39,9 @@
 </div>
 
 @code {
-    async Task ModifyScore(ScoreModifier modifier)
+    void ModifyScore(ScoreModifier modifier)
     {
         ScoreService.ModifyScore(modifier);
-        await MessagingService.SendMessage();
     }
 
     protected override async Task OnInitializedAsync()

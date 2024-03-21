@@ -1,30 +1,45 @@
 ﻿@page "/armyList"
-@using BattleBuddy.WebApp.Services
 @using BattleBuddy.WebApp.Services.SignalR
 @using BattleBuddy.WebApp.StateContainers
-@inject ArmyListService ArmyListService
+@using BattleBuddy.WebApp.Services
 @inject SignalRMessageFactory MessageFactory
 @inject SignalRMessagingService MessagingService
+@inject SessionConfiguration SessionConfiguration
 @inject Game Game
 
-<div class="d-flex flex-column">
-    <div>ArmyList
-        <div class="btn btn-secondary" style="float:right" @onclick="Initialize"><span>Initialize</span></div>
-        <div class="btn btn-secondary" style="float:right" @onclick="Swap"><span>Swap</span></div>
-        <div class="btn btn-secondary" style="float:right" @onclick="UpdateLists"><span>Reload</span></div>
-    </div>
+<div class="d-flex justify-content-around align-items-center">
+    <input type="radio" class="btn-check" name="focus-selection" id="left-focus" checked="@(Game.ColumnLayout == ColumnLayout.ExtendLeft)" @onchange="() => ChangeLayout(ColumnLayout.ExtendLeft)" autocomplete="off">
+    <label class="btn btn-outline-dark flex-fill" for="left-focus">Left</label>
     
-    @foreach (var entry in Game.ArmyListEntries.Where(e => e.Origin.Equals(Origin, StringComparison.OrdinalIgnoreCase)))
+    <input type="radio" class="btn-check" name="focus-selection" id="justify" checked="@(Game.ColumnLayout == ColumnLayout.Justify)" @onchange="() => ChangeLayout(ColumnLayout.Justify)" autocomplete="off">
+    <label class="btn btn-outline-dark flex-fill" for="justify">Justify</label>
+
+    <input type="radio" class="btn-check" name="focus-selection" id="right-focus" checked="@(Game.ColumnLayout == ColumnLayout.ExtendRight)" @onchange="() => ChangeLayout(ColumnLayout.ExtendRight)" autocomplete="off">
+    <label class="btn btn-outline-dark flex-fill" for="right-focus">Right</label>
+</div>
+
+<div class="d-flex flex-column">
+    <div class="btn btn-primary mt-1" @onclick="() => ScrollToPercent(0)">
+        <span>Top</span>
+    </div>
+
+    @foreach (var entry in Entries)
     {
         <div class="btn btn-primary mt-1" @onclick="() => ScrollToEntry(entry.Uid)">
             <span>@entry.Name</span>
         </div>
     }
+    
+    <div class="btn btn-primary mt-1" @onclick="() => ScrollToPercent(100)">
+        <span>Bottom</span>
+    </div>
 </div>
 
 @code {
-    private List<ArmyListEntryDto> Entries { get; set; } = new();
-    private string Origin = "left";
+    private IEnumerable<ArmyListEntryDto> Entries => Game.ArmyListEntries.Where(e => 
+        e.Origin.Equals(OriginText, StringComparison.OrdinalIgnoreCase));
+
+    private string OriginText => SessionConfiguration.ParticipantRole == Participants.PlayerA ? "left" : "right";
 
     protected override void OnInitialized()
     {
@@ -33,27 +48,47 @@
         {
             InvokeAsync(StateHasChanged);
         });
+
+        Game.OnChange += UpdateUi;
+        SessionConfiguration.OnChange += UpdateUi;
         base.OnInitialized();
+    }
+
+    async Task ChangeLayout(ColumnLayout layout)
+    {
+        switch (layout)
+        {
+            case ColumnLayout.ExtendLeft:
+                await MessagingService.SendMessage(MessageFactory.CreateRequestExtendLeftColumnMessage());
+                break;
+            case ColumnLayout.ExtendRight:
+                await MessagingService.SendMessage(MessageFactory.CreateRequestExtendRightColumnMessage());
+                break;
+            case ColumnLayout.Justify:
+                await MessagingService.SendMessage(MessageFactory.CreateRequestJustifyColumnsMessage());
+                break;
+        }
     }
 
     async Task ScrollToEntry(Guid id)
     {
-        var message = MessageFactory.CreateScrollToArmyListEntryMessage(id);
-        await MessagingService.SendMessage(message);
+        await MessagingService.SendMessage(MessageFactory.CreateScrollToArmyListEntryMessage(id));
     }
 
-    void Swap()
+    async Task ScrollToPercent(int percent)
     {
-        Origin = Origin.Equals("left", StringComparison.OrdinalIgnoreCase) ? "right" : "left";
+        await MessagingService.SendMessage(MessageFactory.CreateScrollToPercent(OriginText, percent));
     }
 
-    async Task Initialize()
+    void UpdateUi(object? sender, EventArgs args)
     {
-        await MessagingService.SendMessage(MessageFactory.CreateInitializeMessage());
+        InvokeAsync(StateHasChanged);
     }
 
-    async Task UpdateLists()
+    public async ValueTask Dispose()
     {
-        await MessagingService.SendMessage(MessageFactory.CreateRequestListUpdateMessage());
+        Game.OnChange -= UpdateUi;
+        SessionConfiguration.OnChange -= UpdateUi;
+        await MessagingService.Dispose();
     }
 }

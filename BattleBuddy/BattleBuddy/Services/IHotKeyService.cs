@@ -8,7 +8,7 @@ namespace BattleBuddy.Services
 {
     public interface IHotKeyService
     {
-        Task ExecuteHotkey(Key key, ModifierKeys modifier);
+        Task ExecuteHotkey(Key key, ModifierKeys modifier, KeyboardEventArgs e);
         List<HotKeyViewModel> GetHotKeys();
         void RegisterHotkey(HotKeyViewModel hotkey, Func<Task> action);
     }

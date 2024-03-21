@@ -19,3 +19,16 @@ function getEntries() {
     return entries;
 };
 
+function scrollToPercent(percent){
+    var body = document.body;
+    var html = document.documentElement;
+    var height = Math.max(body.scrollHeight, body.offsetHeight,html.clientHeight, html.scrollHeight, html.offsetHeight);
+    var factor = percent/100.0;
+    var pixelTarget = height * factor;
+    window.scrollTo({top: pixelTarget,behavior: 'smooth',});
+    console.log("scrolled to " + pixelTarget + "px(" + + percent + "%) of max height " + height + "px");
+}
+        
+function scrollToEntry(uid){
+    $("#uid_" + uid)[0].scrollIntoView({ behavior: 'smooth' });
+}
