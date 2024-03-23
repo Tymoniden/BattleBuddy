@@ -13,7 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\BattleBuddy.Shared\BattleBuddy.Shared.csproj" />
     <ProjectReference Include="..\Client\BattleBuddy.BlazorWebApp.Client.csproj" />
-    <ProjectReference Include="..\Shared\BattleBuddy.BlazorWebApp.Shared.csproj" />
   </ItemGroup>
 
 

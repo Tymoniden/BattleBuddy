@@ -1,5 +1,6 @@
 ﻿using System;
 using BattleBuddy.Services.SignalR;
+using BattleBuddy.Shared;
 
 namespace BattleBuddy.Services
 {
@@ -17,24 +18,23 @@ namespace BattleBuddy.Services
 
             _signalRService = signalRService ?? throw new ArgumentNullException(nameof(signalRService));
 
-            hotKeyRegistrationService.RegisterHotKey(System.Windows.Input.Key.F6,
-                System.Windows.Input.ModifierKeys.None, "Focus left side",
+            hotKeyRegistrationService.RegisterHotKey(System.Windows.Input.Key.F6, System.Windows.Input.ModifierKeys.None, "Focus left side",
                 async () =>
                 {
                     ExtendLeftColumn();
-                    await _signalRService.SendMessage("ExtendLeftColumn");
+                    await _signalRService.SendMessage(nameof(GameHubSignals.ExtendLeftColumn));
                 });
             hotKeyRegistrationService.RegisterHotKey(System.Windows.Input.Key.F7, System.Windows.Input.ModifierKeys.None, "Justigy sides",
                 async () =>
                 {
                     JustifyColumns();
-                    await _signalRService.SendMessage("JustifyColumns");
+                    await _signalRService.SendMessage(nameof(GameHubSignals.JustifyColumns));
                 });
             hotKeyRegistrationService.RegisterHotKey(System.Windows.Input.Key.F8, System.Windows.Input.ModifierKeys.None, "Focus right side",
                 async () =>
                 {
                     ExtendRightColumn();
-                    await _signalRService.SendMessage("ExtendRightColumn");
+                    await _signalRService.SendMessage(nameof(GameHubSignals.ExtendRightColumn));
                 });
         }
 

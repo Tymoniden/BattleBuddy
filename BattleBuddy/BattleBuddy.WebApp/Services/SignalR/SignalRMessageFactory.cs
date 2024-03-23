@@ -1,4 +1,5 @@
-﻿using BattleBuddy.WebApp.Services.SignalR.Messages;
+﻿using BattleBuddy.Shared;
+using BattleBuddy.WebApp.Services.SignalR.Messages;
 
 namespace BattleBuddy.WebApp.Services.SignalR
 {
@@ -42,6 +43,11 @@ namespace BattleBuddy.WebApp.Services.SignalR
         public RequestJustifyColumnsMessage CreateRequestJustifyColumnsMessage()
         {
             return new RequestJustifyColumnsMessage();
+        }
+
+        public RequestChangeZoomFactorMessage CreateRequestChangeZoomFactorMessage(SideIdentifier sideIdentifier, int zoomFactor)
+        {
+            return new RequestChangeZoomFactorMessage(sideIdentifier, zoomFactor);
         }
     }
 }

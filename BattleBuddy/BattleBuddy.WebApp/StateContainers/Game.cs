@@ -1,4 +1,5 @@
-﻿using BattleBuddy.WebApp.Services;
+﻿using BattleBuddy.Shared;
+using BattleBuddy.WebApp.Services;
 
 namespace BattleBuddy.WebApp.StateContainers
 {
@@ -14,7 +15,15 @@ namespace BattleBuddy.WebApp.StateContainers
 
         public GameScore GameScore { get; set; }
 
-        public List<ArmyListEntryDto> ArmyListEntries { get; set; } = new();
+        public int LeftZoomFactor { get; private set; } = 100;
+
+        public int RightZoomFactor { get; private set; } = 100;
+
+        public ArmyListEntryDto SelectedLeftArmyListEntry { get; private set; }
+
+        public ArmyListEntryDto SelectedRightArmyListEntry { get; private set; }
+
+        public List<ArmyListEntryDto> ArmyListEntries { get; set; } = [];
 
         private ColumnLayout _columnLayout;
 
@@ -26,6 +35,36 @@ namespace BattleBuddy.WebApp.StateContainers
                 _columnLayout = value;
                 OnChange?.Invoke(this, EventArgs.Empty);
             }
+        }
+
+        public void ChangeZoomFactor(SideIdentifier sideIdentifier, int zoomFactor)
+        {
+            if(sideIdentifier == SideIdentifier.Left)
+            {
+                LeftZoomFactor = zoomFactor;
+            }
+
+            if(sideIdentifier == SideIdentifier.Right)
+            {
+                RightZoomFactor = zoomFactor;
+            }
+
+            OnChange?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void ChangeSelectedArmyListEntry(SideIdentifier sideIdentifier, ArmyListEntryDto selectedArmyListEntry)
+        {
+            if(sideIdentifier == SideIdentifier.Left)
+            {
+                SelectedLeftArmyListEntry = selectedArmyListEntry;
+            }
+
+            if(sideIdentifier == SideIdentifier.Right)
+            {
+                SelectedRightArmyListEntry = selectedArmyListEntry;
+            }
+
+            OnChange?.Invoke(this, EventArgs.Empty);
         }
     }
 }

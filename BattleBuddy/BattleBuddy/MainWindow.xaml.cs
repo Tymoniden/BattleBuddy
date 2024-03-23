@@ -9,6 +9,8 @@ using BattleBuddy.Services.Container;
 using BattleBuddy.Services.Messaging;
 using System.Linq;
 using System.Threading.Tasks;
+using BattleBuddy.Shared;
+using BattleBuddy.WebApp.Services.SignalR;
 
 namespace BattleBuddy
 {
@@ -33,9 +35,10 @@ namespace BattleBuddy
             ServiceLocatorService.GetInstance<IWindowLayoutService>().WindowLayoutChanged += WindowLayoutChanged;
 
 
-            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("ExtendLeftColumn" , () => ServiceLocatorService.GetInstance<IWindowLayoutService>().ExtendLeftColumn());
-            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("ExtendRightColumn" , () => ServiceLocatorService.GetInstance<IWindowLayoutService>().ExtendRightColumn());
-            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("JustifyColumns" , () => ServiceLocatorService.GetInstance<IWindowLayoutService>().JustifyColumns());
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback(nameof(GameHubSignals.ExtendLeftColumn) , () => ServiceLocatorService.GetInstance<IWindowLayoutService>().ExtendLeftColumn());
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback(nameof(GameHubSignals.JustifyColumns), () => ServiceLocatorService.GetInstance<IWindowLayoutService>().JustifyColumns());
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback(nameof(GameHubSignals.ExtendRightColumn), () => ServiceLocatorService.GetInstance<IWindowLayoutService>().ExtendRightColumn());
+            
 
             Dispatcher.InvokeAsync(async () =>
             {
@@ -59,12 +62,12 @@ namespace BattleBuddy
                 };
             });
             
-            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("RequestListUpdateMessage" , () =>
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback(nameof(GameHubSignals.RequestListUpdateMessage) , () =>
             {
                 Dispatcher.InvokeAsync(async () => await UpdateEntries());
             });
 
-            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("ScrollDisplayToArmyList",
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback(nameof(GameHubSignals.ScrollDisplayToArmyList),
             (Guid uid) =>
             {
                 Dispatcher.InvokeAsync(async () =>
@@ -86,7 +89,7 @@ namespace BattleBuddy
                 });
             });
 
-            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("ScrollToPercent",
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback(nameof(GameHubSignals.ScrollToPercent),
             (string origin, int percentage) =>
             {
                 Dispatcher.InvokeAsync(async () =>
@@ -98,7 +101,7 @@ namespace BattleBuddy
                 });
             });
 
-            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback("ToggleQrCode", () =>
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback(nameof(GameHubSignals.ToggleQrCode), () =>
             {
                 Dispatcher.Invoke(() =>
                     mainViewModel.ClientEndpointOverlayViewModel.IsVisible =
@@ -106,6 +109,16 @@ namespace BattleBuddy
             });
 
             ServiceLocatorService.GetInstance<IHotKeyRegistrationService>().RegisterHotKey(Key.F3, ModifierKeys.None, "Update entries" , UpdateEntries);
+
+            ServiceLocatorService.GetInstance<ISignalRService>().RegisterCallback(nameof(IGameHub.RequestChangeZoomFactorMessage), (SideIdentifier sideIdentifier, int zoomFactor) =>
+            {
+                var control = (sideIdentifier == SideIdentifier.Left) ? LeftWebView : RightWebView;
+
+                Dispatcher.Invoke(() =>
+                {
+                    control.ZoomFactor = zoomFactor / 100.0;
+                });
+            });
 
             DataContext = mainViewModel;
         }
@@ -120,7 +133,7 @@ namespace BattleBuddy
             var rightRawEntries = await RightWebView.ExecuteScriptAsync("getEntries();");
             _entries.AddRange(ServiceLocatorService.GetInstance<DtoFactory>().CreateArmyListEntry(rightRawEntries, "right"));
 
-            await ServiceLocatorService.GetInstance<ISignalRService>().SendMessage("UpdateArmyListEntries", _entries);
+            await ServiceLocatorService.GetInstance<ISignalRService>().SendMessage(nameof(GameHubSignals.UpdateArmyListEntries), _entries);
         }
 
         private void WindowLayoutChanged(object? sender, EventArgs e)
